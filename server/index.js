@@ -3,7 +3,10 @@ import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import cors from 'cors'
 
+import bookRoutes from './routes/book.js'
 const app = express()
+
+app.use('/books',bookRoutes)
 
 app.use(bodyParser.json({ limit: '30mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
@@ -16,7 +19,7 @@ const PORT = process.env.PORT || 5000
  
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => app.listen(PORT, () => console.log(`Server is running at port ${PORT}'`)))
-    .catch(e => console.log(e))
+    .catch(e => console.log(e.message))
 mongoose.set('useFindAndModify',false)
 
 
