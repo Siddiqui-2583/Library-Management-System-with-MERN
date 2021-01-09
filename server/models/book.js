@@ -17,11 +17,20 @@ const bookSchema = mongoose.Schema({
         type: Number,
         default:0
     },
-    price:{
+    
+    totalPage:{
         type: Number,
         default:0
     },
-
+    yearOfPublication:{
+        type: Number,
+        default:0
+    },
+    description: String,
+     price:{
+        type: Number,
+        default:0
+    }
 })
 
 const book = mongoose.model('book', bookSchema)
