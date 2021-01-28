@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 import cors from 'cors'
 
-import bookRoutes from './routes/book.js'
+import bookRoutes from './routes/bookRoutes.js'
 const app = express()
 
 app.use('/books',bookRoutes)
@@ -14,6 +14,12 @@ app.use(cors())
 
 //mongodb+srv://dbUser:<password>@cluster0.evhow.mongodb.net/<dbname>?retryWrites=true&w=majority
 const CONNECTION_URL = 'mongodb+srv://dbUser:Yrm1sdrmp9GZMOLK@cluster0.evhow.mongodb.net/Library-Management-System?retryWrites=true&w=majority'
+
+
+app.get('/get', (req, res) => {
+    res.send('Hlw')
+})
+
 
 const PORT = process.env.PORT || 5000
  
