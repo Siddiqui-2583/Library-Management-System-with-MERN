@@ -15,9 +15,7 @@ app.use(cors())
 //mongodb+srv://dbUser:<password>@cluster0.evhow.mongodb.net/<dbname>?retryWrites=true&w=majority
 const CONNECTION_URL = 'mongodb+srv://dbUser:Yrm1sdrmp9GZMOLK@cluster0.evhow.mongodb.net/Library-Management-System?retryWrites=true&w=majority'
 
-app.get('/get', (req, res) => {
-    res.send('Hlw');
-})
+
 
 
 
