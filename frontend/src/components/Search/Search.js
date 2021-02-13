@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import * as ReactBootstrap from "react-bootstrap";
@@ -11,37 +11,36 @@ import FormControl from "@material-ui/core/FormControl";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import "./Search.css";
-import { BookContext } from "../Home/Home";
+
 
 
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(2),
-    // marginLeft: theme.spacing(28),
-    minWidth: 230,
+    marginLeft: theme.spacing(5),
+    minWidth: 220,
   },
   keywordBox: {
     padding: theme.spacing(0),
-  },
-  selectEmpty: {
-    marginTop: theme.spacing(3),
+    marginRight: theme.spacing(3)
   },
   button: {
     marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(3),
+    marginLeft: theme.spacing(5),
+    marginBottom: theme.spacing(3),
     borderRadius: 4,
     border: "1px solid #757575",
     color: "black",
     height: 56,
-    padding: "0 30px",
+    padding: "0 40px",
     boxShadow: "0 3px 5px 2px var(--box-shadow)",
   },
 }));
 
-const Search = () => {
-  const [data, setDisplayedBooks] =useContext(BookContext);
-
+const Search = (props) => {
+  // const [data, setDisplayedBooks] =useContext(BookContext);
+  let {data, setDisplayedBooks} = props;
   const classes = useStyles();
   let filter;
   const [filterOption, setFilterOption] = useState();
@@ -119,7 +118,7 @@ const Search = () => {
     <div className="pt-2">
       <ReactBootstrap.Container>
         <ReactBootstrap.Row>
-          <ReactBootstrap.Col xs={12} sm={6} md={4}>
+          <ReactBootstrap.Col xs={12} sm={6} md={6} lg={4}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="demo-simple-select-outlined-label">
                 Filter Option
@@ -141,7 +140,7 @@ const Search = () => {
               </Select>
             </FormControl>
           </ReactBootstrap.Col>
-          <ReactBootstrap.Col xs={12} sm={6} md={4}>
+          <ReactBootstrap.Col xs={12} sm={6} md={6} lg={4}>
             <Autocomplete
               onChange={(event, value) => setAutoCompleteValue(value)}
               options={hint}
@@ -161,7 +160,7 @@ const Search = () => {
               )}
             />
           </ReactBootstrap.Col>
-          <ReactBootstrap.Col xs={12} sm={12} md={4}>
+          <ReactBootstrap.Col xs={12} sm={12} md={12} lg={4}>
             <Button
               className={classes.button}
               onClick={() => handleOnClick(filterOption, autoCompleteValue)}

@@ -9,6 +9,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
+import { Link} from "react-router-dom";
 // import MenuItem from "@material-ui/core/MenuItem";
 // import Menu from "@material-ui/core/Menu";
 
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 }));
-const Header = () => {
+const Header = (props) => {
 
 
   const classes = useStyles();
@@ -42,7 +43,9 @@ const Header = () => {
   // const handleClose = () => {
   //   setAnchorEl(null);
   // };
+  const preventDefault = (event) => event.preventDefault();
   return (
+    
     <div>
       <AppBar position="static">
         <Toolbar>
@@ -55,8 +58,9 @@ const Header = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Abdul Jalil Literature and Cultural Center
+              আব্দুল জলিল সাহিত্য ও সাংস্কৃতিক কেন্দ্র
           </Typography>
+
           {/* {auth && (
             <div>
               <IconButton
@@ -97,7 +101,7 @@ const Header = () => {
                   aria-label="login switch"
                 />
               }
-              label={auth ? "Book" : "Disc"}
+              label={auth ? "বই" : "ডিস্ক"}
             />
           </FormGroup>
         </Toolbar>
