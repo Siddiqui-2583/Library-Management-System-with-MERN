@@ -1,5 +1,50 @@
 import Book from '../models/book.js'
 
+export const addNewBook = (req, res) => {
+  let {
+    title,
+    writer,
+    category,
+    almira,
+    shelf,
+    publisher,
+
+    isbn,
+
+    totalPage,
+    yearOfPublication,
+    description,
+    price,
+  } = req.body;
+  let book = new Book({
+    title,
+    writer,
+    category,
+    almira,
+    shelf,
+    publisher,
+
+    isbn,
+
+    totalPage,
+    yearOfPublication,
+    description,
+    price,
+  });
+  console.log(book);
+
+  book
+    .save()
+    .then((b) => {
+      console.log("Book posted to mongo", b);
+    })
+    .catch((e) => {
+      console.log(e);
+      res.json({
+        message: "Error Occurred",
+      });
+    });
+};
 export const getBooks =async (req, res) => {
     try {
         const book = await Book.find()
@@ -61,6 +106,3 @@ export const postAllBook = (req, res) => {
       });
   });
 };
-export const addBook = (req, res) => {
-    res.send()
-}

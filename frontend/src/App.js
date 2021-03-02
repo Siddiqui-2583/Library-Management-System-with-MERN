@@ -2,11 +2,11 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Header from "./components/Header/Header.js";
 import Search from "./components/Search/Search.js";
-import{ useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Table from "./components/Table/Table.js";
-import Loading from "./components/Loading/Loading";
-
+import AddNewBook from "./components/AddNewBook/AddNewBook.js";
+import "./app.css";
 const App = () => {
   let searchedBooks;
   const [data, setData] = useState([]);
@@ -16,7 +16,7 @@ const App = () => {
     axios
       .get("/books")
       .then((response) => {
-        console.log(response.data);
+        //console.log(response.data);
         setData(response.data);
         setDisplayedBooks(response.data);
         setLoading("none");
@@ -32,23 +32,27 @@ const App = () => {
     <div>
       <Router>
         <Header />
-        <Search
-          data={data}
-          displayBooks={displayBooks}
-          setDisplayedBooks={setDisplayedBooks}
-        />
+
         <Switch>
-          <Route path="/">
-            {loading === "block" ? 
+          <Route exact path="/">
+            <Search
+              data={data}
+              displayBooks={displayBooks}
+              setDisplayedBooks={setDisplayedBooks}
+            />
+            {/* {loading === "block" ? 
               <Loading loading={loading} />
              : 
               <Table data={displayBooks} />
-            }
-            {/* <Table data={displayBooks} /> */}
+            } */}
+
+            <Table loading={loading} data={displayBooks} />
+          </Route>
+          <Route path="/add-new-book">
+            <AddNewBook />
           </Route>
         </Switch>
       </Router>
-      {/* <Home /> */}
     </div>
   );
 };
