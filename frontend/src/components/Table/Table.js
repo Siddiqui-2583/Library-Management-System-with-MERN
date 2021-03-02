@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -8,15 +8,38 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import * as ReactBootstrap from 'react-bootstrap';
-// import data from './books.json';
+import * as ReactBootstrap from "react-bootstrap";
+import Loading from "../Loading/Loading.js";
+import Details from "../Details/Details.js";
+import PropTypes from "prop-types";
+import Fab from "@material-ui/core/Fab";
+import Icon from "@material-ui/core/Icon";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Popover from "@material-ui/core/Popover";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
-// const newData = data.map((data) => data)
-// console.log(data)
-
+// const useStyles = makeStyles((theme) => ({
+//   typography: {
+//     padding: theme.spacing(2),
+//   },
+// }));
 
 export default function StickyHeadTable(props) {
-  const useStyles = makeStyles({
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    console.log(event.currentTarget.children);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+  const useStyles = makeStyles((theme) => ({
     root: {
       width: "100%",
       height: "100%",
@@ -24,12 +47,20 @@ export default function StickyHeadTable(props) {
     container: {
       maxHeight: 500,
     },
-  });
+    fab: {
+      margin: theme.spacing.unit,
+    },
+    extendedIcon: {
+      marginRight: theme.spacing.unit,
+    },
+    
+  }));
+
   let data = props.data;
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -60,32 +91,37 @@ export default function StickyHeadTable(props) {
   ];
   const moreInfo = (
     <div>
-      <ReactBootstrap.Button variant="success">More info</ReactBootstrap.Button>
+      <ReactBootstrap.Button variant="success" onClick={handleClick}>
+        More info
+      </ReactBootstrap.Button>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        <Details />
+      </Popover>
     </div>
   );
 
   const action = (
     <div>
       <ReactBootstrap.Button variant="warning">Edit</ReactBootstrap.Button>{" "}
+      {/* <Fab color="secondary" aria-label="Edit" className={classes.fab}>
+        <Icon>edit_icon</Icon>
+      </Fab> */}
       <ReactBootstrap.Button variant="danger">Delete</ReactBootstrap.Button>
     </div>
   );
-
-  // fetch("./books.json")
-  //   .then((response) => response.json())
-  //   .then((json) => console.log(json));
-
-  // function displayUser(users) {
-  // console.log(users);
-  // const userNames = users.map(user => user.username);
-  // const ul = document.getElementById("users-container");
-  // for(let i=0;i<userNames.length;i++){
-  //     const username = userNames[i];
-  //     const li = document.createElement("li");
-  //     li.innerText=username;
-  //     ul.appendChild(li);
-  // }
-  // }
 
   function createData(
     title,
@@ -119,7 +155,6 @@ export default function StickyHeadTable(props) {
 
   const rows = [];
   props.data.forEach((book) => {
-    // console.log(book)
     rows.push(
       createData(
         book.title,
@@ -137,7 +172,6 @@ export default function StickyHeadTable(props) {
     );
   });
 
-  
   return (
     <div className="container-fluid">
       <container className="row">
@@ -157,31 +191,37 @@ export default function StickyHeadTable(props) {
                   ))}
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {rows
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.code}
-                      >
-                        {columns.map((column) => {
-                          const value = row[column.id];
-                          return (
-                            <TableCell key={column.id} align={column.align}>
-                              {column.format && typeof value === "number"
-                                ? column.format(value)
-                                : value}
-                            </TableCell>
-                          );
-                        })}
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
+              {props.loading === "block" ? (
+                <div className="load">
+                  <Loading />
+                </div>
+              ) : (
+                <TableBody>
+                  {rows
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={row.code}
+                        >
+                          {columns.map((column) => {
+                            const value = row[column.id];
+                            return (
+                              <TableCell key={column.id} align={column.align}>
+                                {column.format && typeof value === "number"
+                                  ? column.format(value)
+                                  : value}
+                              </TableCell>
+                            );
+                          })}
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              )}
             </Table>
           </TableContainer>
           <TablePagination
@@ -199,5 +239,6 @@ export default function StickyHeadTable(props) {
   );
 }
 
-
-
+StickyHeadTable.propTypes = {
+  classes: PropTypes.object.isRequired,
+};

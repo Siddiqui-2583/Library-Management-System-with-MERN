@@ -17,13 +17,15 @@ import "./Search.css";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: theme.spacing(2),
+    
+    marginTop: theme.spacing(2),
     marginLeft: theme.spacing(5),
     minWidth: 220,
   },
   keywordBox: {
+    
     padding: theme.spacing(0),
-    marginRight: theme.spacing(3)
+    marginRight: theme.spacing(3),
   },
   button: {
     marginTop: theme.spacing(2),
@@ -116,6 +118,7 @@ const Search = (props) => {
 
   return (
     <div className="pt-2">
+      <br/>
       <ReactBootstrap.Container>
         <ReactBootstrap.Row>
           <ReactBootstrap.Col xs={12} sm={6} md={6} lg={4}>

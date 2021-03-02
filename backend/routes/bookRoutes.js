@@ -1,7 +1,7 @@
 import express from 'express'
 import {
   getBooks,
-  addBook,
+  addNewBook,
   postAllBook,
 } from "../controllers/bookController.js";
 
@@ -9,7 +9,7 @@ import {
 const router = express.Router();
 
 router.get("/books", getBooks);
-router.post('/add-new-book', addBook)
+router.post("/add-new-book", addNewBook);
 router.post("/postAllBook", postAllBook);
 router.get('/axios',(req,res)=>{res.json('Hello axios!')})
 export default router

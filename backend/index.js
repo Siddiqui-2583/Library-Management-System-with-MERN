@@ -5,12 +5,18 @@ import cors from 'cors'
 import bookRoutes from './routes/bookRoutes.js'
 import Book from './models/book.js'
 const app = express()
+app.use(cors());
+
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 app.use('/',bookRoutes)
+app.use('/test', (req, res) => {
+    console.log(req.body)
+    res.send('success')
+})
 
-app.use(bodyParser.json({ limit: '30mb', extended: true }))
-app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
-app.use(cors())
+
 
 //mongodb+srv://dbUser:<password>@cluster0.evhow.mongodb.net/<dbname>?retryWrites=true&w=majority
 const CONNECTION_URL = 'mongodb+srv://dbUser:Yrm1sdrmp9GZMOLK@cluster0.evhow.mongodb.net/Library-Management-System?retryWrites=true&w=majority'
