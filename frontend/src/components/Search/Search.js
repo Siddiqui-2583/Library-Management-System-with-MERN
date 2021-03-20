@@ -11,19 +11,14 @@ import FormControl from "@material-ui/core/FormControl";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import "./Search.css";
-
-
-
-
+import axios from "axios";
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    
     marginTop: theme.spacing(2),
     marginLeft: theme.spacing(5),
     minWidth: 220,
   },
   keywordBox: {
-    
     padding: theme.spacing(0),
     marginRight: theme.spacing(3),
   },
@@ -42,19 +37,31 @@ const useStyles = makeStyles((theme) => ({
 
 const Search = (props) => {
   // const [data, setDisplayedBooks] =useContext(BookContext);
-  let {data, setDisplayedBooks} = props;
+  let { data, setDisplayedBooks } = props;
   const classes = useStyles();
-  let filter;
   const [filterOption, setFilterOption] = useState();
   const [autoCompleteValue, setAutoCompleteValue] = useState();
   const [hint, setHint] = useState([]);
   let searchResult;
-  
-  
-  const handleChange = (event) => {
+
+  const handleHint = (filter,keyword) => {
+    axios
+      .get("/books/:keyword")
+      .then((response) => {
+        //console.log(response.data);
+        setHint();
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleFilterSelection = (event) => {
     setFilterOption(event.target.value);
-    // console.log(filterOption);
     const key = event.target.value;
+    console.log(key);
+    // let query = 'Allah'
+    // setHint(`${data}.slice(0, 300).map((item) => item.${key})`);
+    // const queryResult = data.filter(book => book.writer.includes(query) );
+    // console.log(queryResult)
     // console.log(`data.slice(0, 300).map((item) => item.${key})`);
     switch (key) {
       case "everywhere":
@@ -81,44 +88,101 @@ const Search = (props) => {
       default:
         break;
     }
+  };
+  const handleAutoComplete = (value) => {
+    console.log("keyword for auto complete hint: " + value);
+    setAutoCompleteValue(value)
+    // let match = data.slice(0, 300).includes(value);
+    // setHint(match)
+    // let matches = data.filter(book => {
+    //   const regex = new RegExp(`^${value}`, 'gi');
+    //   return book.writer.match(regex) || book.abbr.match(regex)
+    // })
+    // if (value.length === 0) {
+    //   matches=[]
+    // }
+    // let matches = data.writer.map((book) => book.includes("Allah"));
+    // let x=matches.map(book => book.includes('Allah'))
+    // console.log(matches)
+    
+    // console.log(`data.slice(0, 300).map((item) => item.${key})`);
+    // switch (value) {
+    //   case "everywhere":
+    //     setHint([]);
+    //     break;
+    //   case "title":
+    //     setHint(data.slice(0, 300).map((item) => item.title));
+    //     break;
+    //   case "writer":
+    //     setHint(data.slice(0, 300).map((item) => item.writer));
+    //     break;
+    //   case "publisher":
+    //     setHint(data.slice(0, 300).map((item) => item.publisher));
+    //     break;
+    //   case "category":
+    //     setHint(data.slice(0, 300).map((item) => item.category));
+    //     break;
+    //   case "almira":
+    //     setHint(data.slice(0, 300).map((item) => item.almira));
+    //     break;
+    //   case "isbn":
+    //     setHint(data.slice(0, 300).map((item) => item.isbn));
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
-
-  const handleOnClick = (filterOption, autoCompleteValue) => {
-    // console.log( filterOption, autoCompleteValue)
-  
+  const handleSearchResult = () => {
+    console.log(filterOption, autoCompleteValue);
+    // searchResult = data
+    //   .slice(0, 300)
+    //   .filter(`(item) => item.${filterOption} === ${autoCompleteValue}`);  
+    
     switch (filterOption) {
       case "everywhere":
-        searchResult = []
+        searchResult = [];
         break;
       case "title":
-        searchResult = data.slice(0, 300).filter((item) => item.title === autoCompleteValue);
+        searchResult = data
+          .slice(0, 300)
+          .filter((item) => item.title === autoCompleteValue);
         break;
       case "writer":
-        searchResult = data.slice(0, 300).filter((item) => item.writer === autoCompleteValue);
+        searchResult = data
+          .slice(0, 300)
+          .filter((item) => item.writer === autoCompleteValue);
         break;
       case "publisher":
-        searchResult = data.slice(0, 300).filter((item) => item.publisher === autoCompleteValue);
+        searchResult = data
+          .slice(0, 300)
+          .filter((item) => item.publisher === autoCompleteValue);
         break;
       case "category":
-        searchResult = data.slice(0, 300).filter((item) => item.category === autoCompleteValue);
+        searchResult = data
+          .slice(0, 300)
+          .filter((item) => item.category === autoCompleteValue);
         break;
       case "almira":
-        searchResult = data.slice(0, 300).filter((item) => item.almira === autoCompleteValue);
+        searchResult = data
+          .slice(0, 300)
+          .filter((item) => item.almira === autoCompleteValue);
         break;
       case "isbn":
-        searchResult = data.slice(0, 300).filter((item) => item.isbn === autoCompleteValue);
+        searchResult = data
+          .slice(0, 300)
+          .filter((item) => item.isbn === autoCompleteValue);
         break;
       default:
         break;
     }
-    console.log(searchResult);
-    // getSearchResult(searchResult)
-    setDisplayedBooks(searchResult)
-  }
+    // console.log(searchResult);
+    // // getSearchResult(searchResult)
+    setDisplayedBooks(searchResult);
+  };
 
   return (
     <div className="pt-2">
-      <br/>
+      <br />
       <ReactBootstrap.Container>
         <ReactBootstrap.Row>
           <ReactBootstrap.Col xs={12} sm={6} md={6} lg={4}>
@@ -129,8 +193,7 @@ const Search = (props) => {
               <Select
                 labelId="demo-simple-select-outlined-label"
                 id="demo-simple-select-outlined"
-                value={filter}
-                onChange={handleChange}
+                onChange={handleFilterSelection}
                 label="Select Filter Option"
               >
                 {/* <MenuItem value={"everywhere"}>Search Everywhere</MenuItem> */}
@@ -145,29 +208,29 @@ const Search = (props) => {
           </ReactBootstrap.Col>
           <ReactBootstrap.Col xs={12} sm={6} md={6} lg={4}>
             <Autocomplete
-              onChange={(event, value) => setAutoCompleteValue(value)}
               options={hint}
-              // filterOptions={(options, state) => options}
               className={classes.keywordBox}
               freeSolo
               id="free-solo-2-demo"
               disableClearable
-              // options={data.map((item) => item.title)}
+              onChange={(event, newValue) => {
+                handleAutoComplete(newValue);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Enter the keyword"
                   margin="normal"
                   variant="outlined"
+                  onChange={(event) => {
+                    handleAutoComplete(event.target.value);
+                  }}
                 />
               )}
             />
           </ReactBootstrap.Col>
           <ReactBootstrap.Col xs={12} sm={12} md={12} lg={4}>
-            <Button
-              className={classes.button}
-              onClick={() => handleOnClick(filterOption, autoCompleteValue)}
-            >
+            <Button className={classes.button} onClick={() => handleSearchResult()}>
               Search
             </Button>
           </ReactBootstrap.Col>

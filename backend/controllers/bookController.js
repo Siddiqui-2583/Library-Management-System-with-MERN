@@ -106,3 +106,26 @@ export const postAllBook = (req, res) => {
       });
   });
 };
+
+export const findDetails = async (req, res, next) => {
+  console.log('hlw')
+  const filter = req.body.filter.toLowerCase();
+  const value = req.body.keyword.toLowerCase();
+  
+  const searchObj = {};
+  searchObj[filter] = value;
+
+  try {
+    // Fetch books from database
+    const books = await Book.find(searchObj)
+    // .skip(PER_PAGE * page - PER_PAGE)
+    // .limit(PER_PAGE);
+    res.send(books)
+    console.log(books)
+    // Get the count of total available book of given filter
+    const count = await Book.find(searchObj).countDocuments();
+
+  } catch (err) {
+    console.log(err);
+  }
+};

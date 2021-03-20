@@ -7,11 +7,15 @@ import axios from "axios";
 import Table from "./components/Table/Table.js";
 import AddNewBook from "./components/AddNewBook/AddNewBook.js";
 import "./app.css";
+import Search2 from "./components/Search/Search2.js";
+import MoreInfo from "./components/MoreInfo/MoreInfo.js";
 const App = () => {
   let searchedBooks;
   const [data, setData] = useState([]);
   const [displayBooks, setDisplayedBooks] = useState([]);
+  const [clickedBook, setClickedBook] = useState();
   const [loading, setLoading] = useState("block");
+  console.log(clickedBook)
   useEffect(() => {
     axios
       .get("/books")
@@ -25,6 +29,7 @@ const App = () => {
 
     if (!searchedBooks) {
       setDisplayedBooks(data);
+      
     }
   }, []);
 
@@ -32,9 +37,10 @@ const App = () => {
     <div>
       <Router>
         <Header />
-
+        
         <Switch>
           <Route exact path="/">
+            {/* <Search2 /> */}
             <Search
               data={data}
               displayBooks={displayBooks}
@@ -46,10 +52,14 @@ const App = () => {
               <Table data={displayBooks} />
             } */}
 
-            <Table loading={loading} data={displayBooks} />
+            <Table loading={loading} data={displayBooks} setClickedBook={setClickedBook}/>
           </Route>
           <Route path="/add-new-book">
             <AddNewBook />
+          </Route>
+          <Route path="/more-info">
+            
+            <MoreInfo clickedBook={clickedBook}/>
           </Route>
         </Switch>
       </Router>

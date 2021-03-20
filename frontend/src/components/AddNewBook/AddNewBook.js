@@ -52,9 +52,7 @@ const validate = (values) => {
   }
   return errors;
 };
-const postNewBook = async (values) => {
-  console.log({ values });
-};
+
 function Add() {
   
   return (
@@ -134,7 +132,7 @@ function Add() {
                     label="আলমারি নং"
                     name="almira"
                     component={TextField}
-                    type="text"
+                    type="number"
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -143,7 +141,7 @@ function Add() {
                     label="তাক নং"
                     name="shelf"
                     component={TextField}
-                    type="text"
+                    type="number"
                   />
                 </Grid>
 
@@ -171,7 +169,7 @@ function Add() {
                     label="মোট পৃষ্ঠা সংখ্যা"
                     name="totalPage"
                     component={TextField}
-                    type="text"
+                    type="number"
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -180,7 +178,7 @@ function Add() {
                     label="দাম"
                     name="price"
                     component={TextField}
-                    type="text"
+                    type="number"
                   />
                 </Grid>
                 <Grid item style={{ marginTop: 16 }}>
@@ -196,7 +194,6 @@ function Add() {
                 <Grid item style={{ marginTop: 16 }}>
                   <Link to={"/post-new-book"}>
                     <Button
-                      
                       variant="contained"
                       color="primary"
                       type="submit"

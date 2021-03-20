@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     flexShrink: 0,
   },
-  
+
   drawerHeader: {
     display: "flex",
     alignItems: "center",
@@ -116,7 +116,7 @@ export default function PersistentDrawerLeft() {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
-        position="fixed"
+        position="absolute"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
         })}
@@ -131,9 +131,21 @@ export default function PersistentDrawerLeft() {
           >
             <MenuIcon />
           </IconButton>
+          {/* <Link
+            to="/"
+            className={classes.link}
+            style={{ textDecoration: "none", color: "white" }}
+          > */}
           <Typography variant="h6" className={classes.title}>
-            আব্দুল জলিল সাহিত্য ও সাংস্কৃতিক কেন্দ্র
-          </Typography>
+            <Link
+            to="/"
+            className={classes.link}
+            style={{ textDecoration: "none", color: "white" }}
+          >
+              আব্দুল জলিল সাহিত্য ও সাংস্কৃতিক কেন্দ্র
+              </Link>
+            </Typography>
+          {/* </Link> */}
           <FormGroup>
             <FormControlLabel
               control={<Switch checked={toogle} onChange={handleChange} />}
@@ -152,21 +164,25 @@ export default function PersistentDrawerLeft() {
           paper: classes.drawerPaper,
         }}
       >
-       
-          <div className={classes.drawerHeader}>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === "ltr" ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          </div>
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        </div>
 
         <Divider />
 
         <List>
-          <Link onClick={handleDrawerClose} style={{ textDecoration: 'none',color:"black" }} to="/" className={classes.link}>
+          <Link
+            onClick={handleDrawerClose}
+            style={{ textDecoration: "none", color: "black" }}
+            to="/"
+            className={classes.link}
+          >
             <ListItem button>
               <ListItemIcon>
                 <HomeIcon />
@@ -174,7 +190,11 @@ export default function PersistentDrawerLeft() {
               <ListItemText primary={"Home"} />
             </ListItem>
           </Link>
-          <Link  onClick={handleDrawerClose}  style={{ textDecoration: 'none',color:"black" }} to="/add-new-book">
+          <Link
+            onClick={handleDrawerClose}
+            style={{ textDecoration: "none", color: "black" }}
+            to="/add-new-book"
+          >
             <ListItem button key="Add new book">
               <ListItemIcon>
                 <AddCircleOutlineIcon />
@@ -183,7 +203,12 @@ export default function PersistentDrawerLeft() {
             </ListItem>
           </Link>
 
-          <Link onClick={handleDrawerClose}  style={{ textDecoration: 'none',color:"black" }} to="/about" className={classes.link}>
+          <Link
+            onClick={handleDrawerClose}
+            style={{ textDecoration: "none", color: "black" }}
+            to="/about"
+            className={classes.link}
+          >
             <ListItem button>
               <ListItemIcon>
                 <InfoIcon />

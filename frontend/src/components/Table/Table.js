@@ -12,12 +12,18 @@ import * as ReactBootstrap from "react-bootstrap";
 import Loading from "../Loading/Loading.js";
 import Details from "../Details/Details.js";
 import PropTypes from "prop-types";
-import Fab from "@material-ui/core/Fab";
-import Icon from "@material-ui/core/Icon";
-import DeleteIcon from "@material-ui/icons/Delete";
 import Popover from "@material-ui/core/Popover";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import { Link } from "react-router-dom";
+
+// import Fab from "@material-ui/core/Fab";
+// import Icon from "@material-ui/core/Icon";
+// import DeleteIcon from "@material-ui/icons/Delete";
+// import Typography from "@material-ui/core/Typography";
+// import Button from "@material-ui/core/Button";
 
 // const useStyles = makeStyles((theme) => ({
 //   typography: {
@@ -27,7 +33,7 @@ import Button from "@material-ui/core/Button";
 
 export default function StickyHeadTable(props) {
   const [anchorEl, setAnchorEl] = useState(null);
-
+  let { setClickedBook } = props;
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
     console.log(event.currentTarget.children);
@@ -56,7 +62,7 @@ export default function StickyHeadTable(props) {
     
   }));
 
-  let data = props.data;
+  //let data = props.data;
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -80,38 +86,42 @@ export default function StickyHeadTable(props) {
     { id: "publisher", label: "প্রকাশনী", align: "left" },
     { id: "almira", label: "আলমারি নং", align: "center" },
     { id: "shelf", label: "তাক নং", align: "center" },
-    { id: "moreInfo", label: "More info", align: "center" },
+    // { id: "moreInfo", label: "More info", align: "center" },
     // { id: "isbn", label: "ISBN", align: "center" },
     // { id: "totalPage", label: "Total Page", align: "center" },
     // { id: "yearOfPublication", label: "Year Of Publication", align: "center" },
     // { id: "description", label: "Description", align: "center" },
     // { id: "price", label: "Price", align: "center" },
-
-    { id: "action", label: "Action", align: "center" },
+    // { id: "action", label: "Action", align: "center" },
   ];
-  const moreInfo = (
-    <div>
-      <ReactBootstrap.Button variant="success" onClick={handleClick}>
-        More info
-      </ReactBootstrap.Button>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        <Details />
-      </Popover>
-    </div>
-  );
+
+  
+  
+const test = (<button>dgdg</button>)
+  // const moreInfo = 
+  // (
+  //   <div>
+  //     <ReactBootstrap.Button variant="success" onClick={handleClick}>
+  //       More info
+  //     </ReactBootstrap.Button>
+  //     <Popover
+  //       id={id}
+  //       open={open}
+  //       anchorEl={anchorEl}
+  //       onClose={handleClose}
+  //       anchorOrigin={{
+  //         vertical: "bottom",
+  //         horizontal: "center",
+  //       }}
+  //       transformOrigin={{
+  //         vertical: "top",
+  //         horizontal: "center",
+  //       }}
+  //     >
+  //       <Details />
+  //     </Popover>
+  //   </div>
+  // );
 
   const action = (
     <div>
@@ -134,7 +144,7 @@ export default function StickyHeadTable(props) {
     totalPage,
     yearOfPublication,
     description,
-    price
+    price,
   ) {
     return {
       title,
@@ -148,11 +158,9 @@ export default function StickyHeadTable(props) {
       yearOfPublication,
       description,
       price,
-      moreInfo,
-      action,
+     
     };
   }
-
   const rows = [];
   props.data.forEach((book) => {
     rows.push(
@@ -167,9 +175,10 @@ export default function StickyHeadTable(props) {
         book.totalPage,
         book.yearOfPublication,
         book.description,
-        book.price
+        book.price,
       )
     );
+    
   });
 
   return (
@@ -189,6 +198,8 @@ export default function StickyHeadTable(props) {
                       {column.label}
                     </TableCell>
                   ))}
+                  <TableCell align="right">More info</TableCell>
+                  <TableCell align="right">Action</TableCell>
                 </TableRow>
               </TableHead>
               {props.loading === "block" ? (
@@ -199,7 +210,8 @@ export default function StickyHeadTable(props) {
                 <TableBody>
                   {rows
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
+                      .map((row) => {
+                      console.log(row)
                       return (
                         <TableRow
                           hover
@@ -217,6 +229,36 @@ export default function StickyHeadTable(props) {
                               </TableCell>
                             );
                           })}
+                          <TableCell align="right">
+                            {/* <Link
+                              to="/more-info"
+                              style={{ textDecoration: "none", color: "black" }}
+                            > */}
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={(row) => {
+                                console.log(row);
+                              }}
+                            >
+                              More info
+                            </Button>
+                            {/* </Link> */}
+                          </TableCell>
+                          <TableCell align="right">
+                            <IconButton
+                              aria-label="delete"
+                              className={classes.margin}
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton
+                              aria-label="delete"
+                              className={classes.margin}
+                            >
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </TableCell>
                         </TableRow>
                       );
                     })}
