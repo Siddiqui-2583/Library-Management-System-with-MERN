@@ -1,8 +1,8 @@
-import Book from "../models/book";
+import * as BookService from "./bookService";
 
-export const getAllBooks = async (_req: any, res: any) => {
+export const getAllBooks = async (_: any, res: any) => {
   try {
-    const books = await Book.find().limit(10);
+    const books = await BookService.getAllBooks();
     res.send(books);
   } catch (error) {
     console.log(error);
@@ -10,12 +10,11 @@ export const getAllBooks = async (_req: any, res: any) => {
   }
 };
 
-export const addBook = async (req: { body: any; }, res: any) => {
+export const addBook = async (req: { body: any }, res: any) => {
   const bookObj = req.body;
-  const book = new Book(bookObj);
 
   try {
-    const savedBook = await book.save();
+    const savedBook = await BookService.createBook(bookObj);
     console.log("Book saved in the database", savedBook);
     res.status(201).send(savedBook);
   } catch (error) {
@@ -24,10 +23,10 @@ export const addBook = async (req: { body: any; }, res: any) => {
   }
 };
 
-export const getBook = async (req: { params: { id: any; }; }, res: any) => {
+export const getBook = async (req: { params: { id: string } }, res: any) => {
   const bookId = req.params.id;
   try {
-    const book = await Book.findById(bookId);
+    const book = await BookService.getBookById(bookId);
     res.send(book);
   } catch (error) {
     console.log(error);
@@ -35,44 +34,41 @@ export const getBook = async (req: { params: { id: any; }; }, res: any) => {
   }
 };
 
-export const getHint = async (req: { params: { filter: any; keyword: any; }; }, res: { send: (arg0: any[]) => void; }) => {
+export const getHint = async (
+  req: { params: { filter: string; keyword: string } },
+  res: any
+) => {
   const filter = req.params.filter;
   const value = req.params.keyword;
 
   try {
-    const query:any = {};
-    query[filter] = new RegExp(value, "i");
-
-    const selectQuery = filter + " -_id";
-    const booksQuery = Book.find(query).select(selectQuery);
-
-    const books = await booksQuery.limit(10);
-    const hints = books.map((b) => b.get(filter));
+    const hints = await BookService.getBookHints(filter, value);
     res.send(hints);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('An error occured!');
   }
 };
 
-export const editBook = async (req: { body: any; params: { id: any; }; }, res: any) => {
+export const editBook = async (
+  req: { body: any; params: { id: string } },
+  res: any
+) => {
   const bookObj = req.body;
   const { id } = req.params;
 
   try {
-    const condition = { _id: id };
-    const update = { $set: bookObj };
-    const options = { new: true };
-    const updatedBook = await Book.findOneAndUpdate(condition, update, options);
+    const updatedBook = await BookService.updateBook(id, bookObj);
     res.send(updatedBook);
   } catch (error) {
     res.status(500).send("Book was not updated!");
   }
 };
 
-export const deleteBook = async (req: { params: { id: any; }; }, res: any) => {
+export const deleteBook = async (req: { params: { id: string } }, res: any) => {
   const { id } = req.params;
-  try {
-    const deletedBook = await Book.findOneAndDelete({ _id: id });
+  try {    
+    const deletedBook = await BookService.deleteBook(id);
     res.send(deletedBook);
   } catch (error) {
     console.log(error);
