@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Header from "./components/Header/Header.js";
-import Search from "./components/Search/Search.js";
+import Search from "./components/Search/Search3.js";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Table from "./components/Table/Table.js";
@@ -15,7 +15,7 @@ const App = () => {
   const [displayBooks, setDisplayedBooks] = useState([]);
   const [clickedBook, setClickedBook] = useState();
   const [loading, setLoading] = useState("block");
-  console.log(clickedBook)
+  // console.log(clickedBook)
   useEffect(() => {
     axios
       .get("/books")

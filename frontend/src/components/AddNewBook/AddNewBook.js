@@ -17,24 +17,30 @@ import axios from "axios";
 const onSubmit = async (values) => {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   await sleep(300);
-  window.alert(JSON.stringify(values, 0, 2));
-  console.log(values);
+  // window.alert(JSON.stringify(values, 0, 2));
+  // console.log(values);
+  // console.log(typeof (values));
+  const response = await axios.post(
+    "http://localhost:5000/add-new-book",
+    values
+  );
+  console.log(response)
   // axios
-  //   .post("http://localhost:5000/add-new-book", {values})
+  //   .post(`http://localhost:5000/add-new-book`, { values })
   //   .then((res) => console.log(res))
   //   .catch((err) => console.log(err));
 
-  fetch("http://localhost:5000/add-new-book", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(values),
-  })
-    .then((res) => res.json())
-    .then((order) => {
-      console.log(order);
-    });
+//   fetch("http://localhost:5000/add-new-book", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(values),
+//   })
+//     .then((res) => res.json())
+//     .then((order) => {
+//       console.log(order);
+//     });
 }
 const validate = (values) => {
   const errors = {};

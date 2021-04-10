@@ -1,17 +1,22 @@
 import express from 'express'
 import {
-  getBooks,
-  addNewBook,
+  getAllBooks,
+  addBook,
   postAllBook,
-  findDetails
+  getBook,
+  getHint,
+  editBook,
+  deleteBook,
 } from "../controllers/bookController.js";
-
 
 const router = express.Router();
 
-router.get("/books", getBooks);
-router.get("/books/:filer/:keyword",findDetails)
-router.post("/add-new-book", addNewBook);
-router.post("/postAllBook", postAllBook);
-router.get('/axios',(req,res)=>{res.json('Hello axios!')})
+router.get("/books", getAllBooks);
+router.post("/add-new-book", addBook);
+router.get("/books/:id", getBook);
+router.get("/books/:filter/:keyword", getHint)
+router.put("/books/edit/:id", editBook);
+router.delete("/books/delete/:id", deleteBook);
+
 export default router
+

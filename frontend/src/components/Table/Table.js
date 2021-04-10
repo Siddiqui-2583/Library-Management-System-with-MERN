@@ -134,6 +134,7 @@ const test = (<button>dgdg</button>)
   );
 
   function createData(
+    id,
     title,
     writer,
     category,
@@ -147,6 +148,7 @@ const test = (<button>dgdg</button>)
     price,
   ) {
     return {
+      id,
       title,
       writer,
       category,
@@ -165,6 +167,7 @@ const test = (<button>dgdg</button>)
   props.data.forEach((book) => {
     rows.push(
       createData(
+        book._id,
         book.title,
         book.writer,
         book.category,
@@ -237,8 +240,8 @@ const test = (<button>dgdg</button>)
                             <Button
                               size="small"
                               variant="outlined"
-                              onClick={(row) => {
-                                console.log(row);
+                              onClick={() => {                                                                
+                                console.log("Row", row);
                               }}
                             >
                               More info
