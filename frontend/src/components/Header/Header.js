@@ -104,7 +104,9 @@ export default function PersistentDrawerLeft() {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-
+  const reload = () => {
+    window.location.reload(false);
+  }
   const handleDrawerClose = () => {
     setOpen(false);
   };
@@ -138,7 +140,8 @@ export default function PersistentDrawerLeft() {
           > */}
           <Typography variant="h6" className={classes.title}>
             <Link
-            to="/"
+              to="/"
+              onClick={reload}
             className={classes.link}
             style={{ textDecoration: "none", color: "white" }}
           >
