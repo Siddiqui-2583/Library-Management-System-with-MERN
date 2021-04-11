@@ -26,7 +26,7 @@ const onSubmit = async (values) => {
   // );
   // console.log(response)
   axios
-    .post("http://localhost:5000/add-new-book", values)
+    .post("http://localhost:5000/books/edit", values)
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
 

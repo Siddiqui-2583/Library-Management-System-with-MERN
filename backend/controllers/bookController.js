@@ -71,14 +71,7 @@ export const getBook = async (req, res, next) => {
 export const getHint = async (req, res, next) => {
   const filter = req.params.filter
   const value = req.params.keyword
-
-  if (value == {}) {
-    res.send([])
-    return;
-  }
-  const searchObj = {};
-  // searchObj[filter] = value;
-  // console.log(filter,value)
+  
   try {
     let booksQuery = null;
     // const books = await Book.find({`${filter}` : new RegExp(value,"i")});    
@@ -126,7 +119,7 @@ export const getHint = async (req, res, next) => {
     var books = await booksQuery.limit(10);
     var hints = books.map(b=>b[filter]);
     res.send(hints);
-    console.log(hints);
+    // console.log(hints);
   } catch (err) {
     console.log(err);
   }

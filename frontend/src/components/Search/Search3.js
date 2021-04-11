@@ -67,43 +67,37 @@ const Search = (props) => {
     //   .filter(`(item) => item.${filterOption} === ${autoCompleteValue}`);  
     
     switch (filterOption) {
-      case "everywhere":
-        searchResult = [];
-        break;
+      // case "everywhere":
+      //   searchResult = [];
+      //   break;
       case "title":
         searchResult = data
-          .slice(0, 300)
           .filter((item) => item.title === autoCompleteValue);
         break;
       case "writer":
         searchResult = data
-          .slice(0, 300)
           .filter((item) => item.writer === autoCompleteValue);
         break;
       case "publisher":
         searchResult = data
-          .slice(0, 300)
           .filter((item) => item.publisher === autoCompleteValue);
         break;
       case "category":
         searchResult = data
-          .slice(0, 300)
           .filter((item) => item.category === autoCompleteValue);
         break;
       case "almira":
         searchResult = data
-          .slice(0, 300)
           .filter((item) => item.almira === autoCompleteValue);
         break;
       case "isbn":
         searchResult = data
-          .slice(0, 300)
           .filter((item) => item.isbn === autoCompleteValue);
         break;
       default:
         break;
     }
-    // console.log(searchResult);
+    console.log(searchResult);
     // // getSearchResult(searchResult)
     setDisplayedBooks(searchResult);
   };
@@ -141,8 +135,8 @@ const Search = (props) => {
               freeSolo
               id="free-solo-2-demo"
               disableClearable
-              onChange={(event, value) => {
-                setAutoCompleteValue(value)
+              onChange={(event, newValue) => {
+                setAutoCompleteValue(newValue);
               }}
               renderInput={(params) => (
                 <TextField
@@ -151,7 +145,7 @@ const Search = (props) => {
                   margin="normal"
                   variant="outlined"
                   onChange={(event) => {
-                    setAutoCompleteValue(event.target.value)
+                    // setAutoCompleteValue(event.target.value)
                     console.log(filterOption, event.target.value);
                     handleHint(filterOption,event.target.value);
                   }}

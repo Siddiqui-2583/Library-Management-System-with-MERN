@@ -18,12 +18,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { Link } from "react-router-dom";
-
-// import Fab from "@material-ui/core/Fab";
-// import Icon from "@material-ui/core/Icon";
-// import DeleteIcon from "@material-ui/icons/Delete";
-// import Typography from "@material-ui/core/Typography";
-// import Button from "@material-ui/core/Button";
+import axios from "axios";
 
 // const useStyles = makeStyles((theme) => ({
 //   typography: {
@@ -76,6 +71,28 @@ export default function StickyHeadTable(props) {
     setPage(0);
   };
 
+  const handleMoreInfo = (book) => {
+    console.log(book)
+  }
+  const handleEdit = (id) => {
+    console.log(id);
+    axios
+      .put("/books/edit/"+id)
+      .then((response) => {
+        console.log(response.data.title + " Edited");
+        
+      })
+      .catch((err) => console.log(err));
+  };
+  const handleDelete = (id) => {
+    console.log(id);
+    axios
+      .delete("/books/delete/" + id)
+      .then((response) => {
+        console.log(response.data.title + " deleted");
+      })
+      .catch((err) => console.log(err));
+  };
   // console.log(data);
   // console.log(props.data);
 
@@ -240,8 +257,8 @@ const test = (<button>dgdg</button>)
                             <Button
                               size="small"
                               variant="outlined"
-                              onClick={() => {                                                                
-                                console.log("Row", row);
+                              onClick={() => {
+                                handleMoreInfo(row);
                               }}
                             >
                               More info
@@ -250,13 +267,19 @@ const test = (<button>dgdg</button>)
                           </TableCell>
                           <TableCell align="right">
                             <IconButton
-                              aria-label="delete"
+                              aria-label="edit"
+                              onClick={() => {
+                                handleEdit(row.id);
+                              }}
                               className={classes.margin}
                             >
                               <EditIcon fontSize="small" />
                             </IconButton>
                             <IconButton
                               aria-label="delete"
+                              onClick={() => {
+                                handleDelete(row.id);
+                              }}
                               className={classes.margin}
                             >
                               <DeleteIcon fontSize="small" />
