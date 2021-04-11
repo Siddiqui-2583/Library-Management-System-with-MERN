@@ -76,13 +76,13 @@ export default function StickyHeadTable(props) {
   }
   const handleEdit = (id) => {
     console.log(id);
-    axios
-      .put("/books/edit/"+id)
-      .then((response) => {
-        console.log(response.data.title + " Edited");
+    // axios
+    //   .put("/books/edit/"+id)
+    //   .then((response) => {
+    //     console.log(response.data.title + " Edited");
         
-      })
-      .catch((err) => console.log(err));
+    //   })
+    //   .catch((err) => console.log(err));
   };
   const handleDelete = (id) => {
     console.log(id);
@@ -250,31 +250,33 @@ const test = (<button>dgdg</button>)
                             );
                           })}
                           <TableCell align="right">
-                            {/* <Link
+                            <Link
                               to="/more-info"
                               style={{ textDecoration: "none", color: "black" }}
-                            > */}
-                            <Button
-                              size="small"
-                              variant="outlined"
-                              onClick={() => {
-                                handleMoreInfo(row);
-                              }}
                             >
-                              More info
-                            </Button>
-                            {/* </Link> */}
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                onClick={() => {
+                                  handleMoreInfo(row);
+                                }}
+                              >
+                                More info
+                              </Button>
+                            </Link>
                           </TableCell>
                           <TableCell align="right">
-                            <IconButton
-                              aria-label="edit"
-                              onClick={() => {
-                                handleEdit(row.id);
-                              }}
-                              className={classes.margin}
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
+                            <Link to="/edit-book">
+                              <IconButton
+                                aria-label="edit"
+                                onClick={() => {
+                                  handleEdit(row.id);
+                                }}
+                                className={classes.margin}
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </Link>
                             <IconButton
                               aria-label="delete"
                               onClick={() => {

@@ -13,54 +13,45 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 
-const onSubmit = async (values) => {
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  await sleep(300);
-  // window.alert(JSON.stringify(values, 0, 2));
-  // console.log(values);
-  // console.log(typeof (values));
 
-  // const response = await axios.post(
-  //   "http://localhost:5000/add-new-book",
-  //   values
-  // );
-  // console.log(response)
-  axios
-    .post("http://localhost:5000/books/edit", values)
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
 
-//   fetch("http://localhost:5000/add-new-book", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(values),
-//   })
-//     .then((res) => res.json())
-//     .then((order) => {
-//       console.log(order);
-//     });
-}
-const validate = (values) => {
-  const errors = {};
-  if (!values.title) {
-    errors.title = "Required";
-  }
-  if (!values.writer) {
-    errors.writer = "Required";
-  }
-  if (!values.category) {
-    errors.category = "Required";
-  }
-  if (!values.publisher) {
-    errors.publisher = "Required";
-  }
-  return errors;
-};
+function Add(props) {
+  const id = props.id;
+  const onSubmit = async (values) => {
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await sleep(300);
+    // window.alert(JSON.stringify(values, 0, 2));
+    // console.log(values);
+    // console.log(typeof (values));
 
-function Add() {
-  
+    // const response = await axios.post(
+    //   "http://localhost:5000/add-new-book",
+    //   values
+    // );
+    // console.log(response)
+     axios
+       .put("/books/edit/" + id)
+       .then((response) => {
+         console.log(response.data.title + " Edited");
+       })
+       .catch((err) => console.log(err));
+  };
+  const validate = (values) => {
+    const errors = {};
+    if (!values.title) {
+      errors.title = "Required";
+    }
+    if (!values.writer) {
+      errors.writer = "Required";
+    }
+    if (!values.category) {
+      errors.category = "Required";
+    }
+    if (!values.publisher) {
+      errors.publisher = "Required";
+    }
+    return errors;
+  };
   return (
     <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
       <CssBaseline />

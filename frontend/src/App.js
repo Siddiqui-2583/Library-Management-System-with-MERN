@@ -8,6 +8,7 @@ import Table from "./components/Table/Table.js";
 import AddNewBook from "./components/AddNewBook/AddNewBook.js";
 import "./app.css";
 import Search2 from "./components/Search/Search2.js";
+import EditBook from "./components/Edit/EditBook.js";
 import MoreInfo from "./components/MoreInfo/MoreInfo.js";
 const App = () => {
   let searchedBooks;
@@ -37,7 +38,7 @@ const App = () => {
     <div>
       <Router>
         <Header />
-        
+
         <Switch>
           <Route exact path="/">
             {/* <Search2 /> */}
@@ -52,14 +53,20 @@ const App = () => {
               <Table data={displayBooks} />
             } */}
 
-            <Table loading={loading} data={displayBooks} setClickedBook={setClickedBook}/>
+            <Table
+              loading={loading}
+              data={displayBooks}
+              setClickedBook={setClickedBook}
+            />
           </Route>
           <Route path="/add-new-book">
             <AddNewBook />
           </Route>
           <Route path="/more-info">
-            
-            <MoreInfo clickedBook={clickedBook}/>
+            <MoreInfo clickedBook={clickedBook} />
+          </Route>
+          <Route path="/edit-book">
+            <EditBook clickedBook={clickedBook} />
           </Route>
         </Switch>
       </Router>
