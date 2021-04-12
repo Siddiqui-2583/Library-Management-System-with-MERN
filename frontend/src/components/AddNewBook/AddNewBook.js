@@ -5,43 +5,39 @@ import { TextField } from "final-form-material-ui";
 import {
   Typography,
   Paper,
+  Link,
   Grid,
   Button,
   CssBaseline,
 } from "@material-ui/core";
 import axios from "axios";
-import { Link } from "react-router-dom";
-
 
 const onSubmit = async (values) => {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   await sleep(300);
-  // window.alert(JSON.stringify(values, 0, 2));
-  // console.log(values);
-  // console.log(typeof (values));
+  window.alert(JSON.stringify(values, 0, 2));
+  console.log(values);
+  // axios
+  //   .post("http://localhost:5000/add-new-book", {values})
+  //   .then((res) => {
+  //     console.log(res)
+  //     window.alert(res.title + " added to database!");
+  //   })
+  //   .catch((err) => console.log(err));
 
-  // const response = await axios.post(
-  //   "http://localhost:5000/add-new-book",
-  //   values
-  // );
-  // console.log(response)
-  axios
-    .post("http://localhost:5000/add-new-book", values)
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
-
-//   fetch("http://localhost:5000/add-new-book", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(values),
-//   })
-//     .then((res) => res.json())
-//     .then((order) => {
-//       console.log(order);
-//     });
-}
+  fetch("http://localhost:5000/add-new-book", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(values),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      window.alert(data.title+ " added to database!");
+    });
+};
 const validate = (values) => {
   const errors = {};
   if (!values.title) {
@@ -51,16 +47,17 @@ const validate = (values) => {
     errors.writer = "Required";
   }
   if (!values.category) {
-    errors.category = "Required";
+    errors.email = "Required";
   }
   if (!values.publisher) {
     errors.publisher = "Required";
   }
   return errors;
 };
-
+const postNewBook = async (values) => {
+  console.log({ values });
+};
 function Add() {
-  
   return (
     <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
       <CssBaseline />
@@ -138,7 +135,7 @@ function Add() {
                     label="আলমারি নং"
                     name="almira"
                     component={TextField}
-                    type="number"
+                    type="text"
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -147,7 +144,7 @@ function Add() {
                     label="তাক নং"
                     name="shelf"
                     component={TextField}
-                    type="number"
+                    type="text"
                   />
                 </Grid>
 
@@ -175,7 +172,7 @@ function Add() {
                     label="মোট পৃষ্ঠা সংখ্যা"
                     name="totalPage"
                     component={TextField}
-                    type="number"
+                    type="text"
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -184,7 +181,7 @@ function Add() {
                     label="দাম"
                     name="price"
                     component={TextField}
-                    type="number"
+                    type="text"
                   />
                 </Grid>
                 <Grid item style={{ marginTop: 16 }}>
@@ -198,7 +195,7 @@ function Add() {
                   </Button>
                 </Grid>
                 <Grid item style={{ marginTop: 16 }}>
-                  <Link to={"/"}>
+                  <Link to={"/post-new-book"}>
                     <Button
                       variant="contained"
                       color="primary"

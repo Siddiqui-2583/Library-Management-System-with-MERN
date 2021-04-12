@@ -43,6 +43,7 @@ export const addBook = (req, res) => {
     .save()
     .then((b) => {
       console.log("Book posted to mongo", b);
+      res.send(b)
     })
     .catch((e) => {
       console.log(e);
@@ -125,6 +126,56 @@ export const getHint = async (req, res, next) => {
   }
 };
 
+
+export const getSearchResults = async (req, res, next) => {
+  const filter = req.params.filter;
+  const value = req.params.keyword;
+console.log('seacrch')
+  try {
+    let booksQuery = null;
+    // const books = await Book.find({`${filter}` : new RegExp(value,"i")});
+
+    switch (filter) {
+      // case "everywhere":
+      //   setHint([]);
+      //   break;
+      case "title":
+        booksQuery = Book.find({ title: new RegExp(value, "i") })
+        break;
+      case "writer":
+        booksQuery = Book.find({ writer: new RegExp(value, "i") })
+        break;
+      case "publisher":
+        booksQuery = Book.find({ publisher: new RegExp(value, "i") })
+        break;
+      case "category":
+        booksQuery = Book.find({ category: new RegExp(value, "i") })
+        break;
+      case "almira":
+        booksQuery = Book.find({ almira: new RegExp(value, "i") })
+        break;
+      case "isbn":
+        booksQuery = Book.find({ isbn: new RegExp(value, "i") })
+        break;
+      default:
+        booksQuery = null;
+        break;
+    }
+
+    if (booksQuery == null) {
+      res.send([]);
+      return;
+    }
+
+    // var books = await booksQuery.limit(10);
+    // var hints = books.map((b) => b[filter]);
+    res.send(booksQuery);
+    // console.log(hints);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const editBook = (req, res) => {
   let {
     title,
@@ -139,9 +190,10 @@ export const editBook = (req, res) => {
     description,
     price,
   } = req.body;
-  // console.log(req.body)
-  let id = req.params.id;
-
+  console.log(req.params)
+  
+  const id = req.params.id
+  console.log(title, writer, id)
   Book.findOneAndUpdate(
     {
       _id: id,
@@ -166,7 +218,8 @@ export const editBook = (req, res) => {
     }
   )
     .then((book) => {
-      res.json(book);
+      // res.json(book);
+      res.send(book)
     })
     .catch((e) => {
       console.log(e);

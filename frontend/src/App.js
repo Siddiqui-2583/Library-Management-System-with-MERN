@@ -8,7 +8,7 @@ import Table from "./components/Table/Table.js";
 import AddNewBook from "./components/AddNewBook/AddNewBook.js";
 import "./app.css";
 import Search2 from "./components/Search/Search2.js";
-import EditBook from "./components/Edit/EditBook.js";
+import EditBook from "./components/EditBook/EditBook2.js";
 import MoreInfo from "./components/MoreInfo/MoreInfo.js";
 const App = () => {
   let searchedBooks;
@@ -38,10 +38,8 @@ const App = () => {
     <div>
       <Router>
         <Header />
-
         <Switch>
           <Route exact path="/">
-            {/* <Search2 /> */}
             <Search
               data={data}
               displayBooks={displayBooks}

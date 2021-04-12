@@ -19,27 +19,37 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { Link } from "react-router-dom";
 import axios from "axios";
-
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
 // const useStyles = makeStyles((theme) => ({
 //   typography: {
 //     padding: theme.spacing(2),
 //   },
 // }));
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
 
 export default function StickyHeadTable(props) {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [openDialogue, setOpenDialogue] = React.useState(false);
+
+  const handleClickOpenDialogue = () => {
+    setOpenDialogue(true);
+  };
+
+  const handleCloseDialogue = () => {
+    setOpenDialogue(false);
+  };
+
   let { setClickedBook } = props;
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-    console.log(event.currentTarget.children);
-  };
+  
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
+  
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "100%",
@@ -71,25 +81,13 @@ export default function StickyHeadTable(props) {
     setPage(0);
   };
 
-  const handleMoreInfo = (book) => {
-    console.log(book)
-  }
-  const handleEdit = (id) => {
-    console.log(id);
-    // axios
-    //   .put("/books/edit/"+id)
-    //   .then((response) => {
-    //     console.log(response.data.title + " Edited");
-        
-    //   })
-    //   .catch((err) => console.log(err));
-  };
   const handleDelete = (id) => {
-    console.log(id);
+    console.log(id,);
+    setOpenDialogue(false)
     axios
       .delete("/books/delete/" + id)
       .then((response) => {
-        console.log(response.data.title + " deleted");
+        console.log(response.data.title + " deleted successfully!");
       })
       .catch((err) => console.log(err));
   };
@@ -112,43 +110,7 @@ export default function StickyHeadTable(props) {
     // { id: "action", label: "Action", align: "center" },
   ];
 
-  
-  
-const test = (<button>dgdg</button>)
-  // const moreInfo = 
-  // (
-  //   <div>
-  //     <ReactBootstrap.Button variant="success" onClick={handleClick}>
-  //       More info
-  //     </ReactBootstrap.Button>
-  //     <Popover
-  //       id={id}
-  //       open={open}
-  //       anchorEl={anchorEl}
-  //       onClose={handleClose}
-  //       anchorOrigin={{
-  //         vertical: "bottom",
-  //         horizontal: "center",
-  //       }}
-  //       transformOrigin={{
-  //         vertical: "top",
-  //         horizontal: "center",
-  //       }}
-  //     >
-  //       <Details />
-  //     </Popover>
-  //   </div>
-  // );
 
-  const action = (
-    <div>
-      <ReactBootstrap.Button variant="warning">Edit</ReactBootstrap.Button>{" "}
-      {/* <Fab color="secondary" aria-label="Edit" className={classes.fab}>
-        <Icon>edit_icon</Icon>
-      </Fab> */}
-      <ReactBootstrap.Button variant="danger">Delete</ReactBootstrap.Button>
-    </div>
-  );
 
   function createData(
     id,
@@ -231,7 +193,7 @@ const test = (<button>dgdg</button>)
                   {rows
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row) => {
-                      console.log(row)
+                      // console.log(row)
                       return (
                         <TableRow
                           hover
@@ -258,7 +220,7 @@ const test = (<button>dgdg</button>)
                                 size="small"
                                 variant="outlined"
                                 onClick={() => {
-                                  handleMoreInfo(row);
+                                  setClickedBook(row);
                                 }}
                               >
                                 More info
@@ -270,7 +232,7 @@ const test = (<button>dgdg</button>)
                               <IconButton
                                 aria-label="edit"
                                 onClick={() => {
-                                  handleEdit(row.id);
+                                  setClickedBook(row);
                                 }}
                                 className={classes.margin}
                               >
@@ -280,12 +242,47 @@ const test = (<button>dgdg</button>)
                             <IconButton
                               aria-label="delete"
                               onClick={() => {
-                                handleDelete(row.id);
+                                // handleDelete(row.id);
+                                handleClickOpenDialogue();
                               }}
                               className={classes.margin}
                             >
                               <DeleteIcon fontSize="small" />
                             </IconButton>
+                            <Dialog
+                              open={openDialogue}
+                              TransitionComponent={Transition}
+                              keepMounted
+                              onClose={handleCloseDialogue}
+                              aria-labelledby="alert-dialog-slide-title"
+                              aria-describedby="alert-dialog-slide-description"
+                            >
+                              <DialogTitle id="alert-dialog-slide-title">
+                                {"Delete Book"}
+                              </DialogTitle>
+                              <DialogContent>
+                                <DialogContentText id="alert-dialog-slide-description">
+                                  Do you really want to delete this book?
+                                </DialogContentText>
+                              </DialogContent>
+                              <DialogActions>
+                                <Button
+                                  onClick={handleCloseDialogue}
+                                  color="primary"
+                                >
+                                  No
+                                </Button>
+                                <Button
+                                  onClick={() => {
+                                    handleDelete(row.id);
+                                    
+                                  }}
+                                  color="primary"
+                                >
+                                  Yes
+                                </Button>
+                              </DialogActions>
+                            </Dialog>
                           </TableCell>
                         </TableRow>
                       );

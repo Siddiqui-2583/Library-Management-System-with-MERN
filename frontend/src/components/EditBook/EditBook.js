@@ -12,52 +12,77 @@ import {
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+let bookId = null;
+const onSubmit = async (values) => {
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  await sleep(300);
+  window.alert(JSON.stringify(values, 0, 2));
+  console.log(values);
+  // console.log(typeof (values));
 
-
+  // const response = await axios.put("/books/edit/" + _id, values);
+  // console.log(response)
+  //  axios
+  //    .put("/books/edit/" + _id)
+  //    .then((response) => {
+  //      console.log(title + " (" + id + ") " + " Edited");
+  //    })
+  //    .catch((err) => console.log(err));
+  fetch(" / books / edit / " + bookId, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(values),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+      window.alert(data.title + " Edited!");
+    });
+};
+const validate = (values) => {
+  const errors = {};
+  if (!values.title) {
+    errors.title = "Required";
+  }
+  if (!values.writer) {
+    errors.writer = "Required";
+  }
+  if (!values.category) {
+    errors.category = "Required";
+  }
+  if (!values.publisher) {
+    errors.publisher = "Required";
+  }
+  return errors;
+};
 
 function Add(props) {
-  const id = props.id;
-  const onSubmit = async (values) => {
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    await sleep(300);
-    // window.alert(JSON.stringify(values, 0, 2));
-    // console.log(values);
-    // console.log(typeof (values));
+  
+  const {
+    _id,
+   title,
+    writer,
+    category,
+    publisher,
+    almira,
+    shelf,
+    isbn,
+    totalPage,
+    yearOfPublication,
+    description,
+    price,
+  } = props.clickedBook;
+  
+  bookId = _id;
 
-    // const response = await axios.post(
-    //   "http://localhost:5000/add-new-book",
-    //   values
-    // );
-    // console.log(response)
-     axios
-       .put("/books/edit/" + id)
-       .then((response) => {
-         console.log(response.data.title + " Edited");
-       })
-       .catch((err) => console.log(err));
-  };
-  const validate = (values) => {
-    const errors = {};
-    if (!values.title) {
-      errors.title = "Required";
-    }
-    if (!values.writer) {
-      errors.writer = "Required";
-    }
-    if (!values.category) {
-      errors.category = "Required";
-    }
-    if (!values.publisher) {
-      errors.publisher = "Required";
-    }
-    return errors;
-  };
   return (
     <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
       <CssBaseline />
       <br />
       <Typography variant="h4" align="center" component="h1" gutterBottom>
-        নতুন বই এর তথ্য দিন
+        বই এর তথ্য পরিবর্তন করুন
       </Typography>
 
       <Form
@@ -80,6 +105,7 @@ function Add(props) {
                     component={TextField}
                     type="text"
                     label="বইয়ের নাম"
+                    defaultValue={title}
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -90,6 +116,7 @@ function Add(props) {
                     component={TextField}
                     type="text"
                     label="লেখক/লেখিকা"
+                    defaultValue={writer}
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -100,6 +127,7 @@ function Add(props) {
                     component={TextField}
                     type="text"
                     label="ক্যাটাগরি"
+                    defaultValue={category}
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -110,6 +138,7 @@ function Add(props) {
                     component={TextField}
                     type="text"
                     label="প্রকাশনী"
+                    defaultValue={publisher}
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -121,6 +150,7 @@ function Add(props) {
                     label="সংক্ষিপ্ত বর্ণ্না"
                     multiline
                     rows={4}
+                    defaultValue={"N/A"}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -129,7 +159,8 @@ function Add(props) {
                     label="আলমারি নং"
                     name="almira"
                     component={TextField}
-                    type="number"
+                    // type="number"
+                    defaultValue={"N/A"}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -138,7 +169,8 @@ function Add(props) {
                     label="তাক নং"
                     name="shelf"
                     component={TextField}
-                    type="number"
+                    // type="number"
+                    defaultValue={"N/A"}
                   />
                 </Grid>
 
@@ -149,6 +181,7 @@ function Add(props) {
                     name="isbn"
                     component={TextField}
                     type="text"
+                    defaultValue={"N/A"}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -158,6 +191,7 @@ function Add(props) {
                     name="yearOfPublication"
                     component={TextField}
                     type="text"
+                    defaultValue={"N/A"}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -166,7 +200,8 @@ function Add(props) {
                     label="মোট পৃষ্ঠা সংখ্যা"
                     name="totalPage"
                     component={TextField}
-                    type="number"
+                    // type="number"
+                    defaultValue={"N/A"}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -175,7 +210,8 @@ function Add(props) {
                     label="দাম"
                     name="price"
                     component={TextField}
-                    type="number"
+                    // type="number"
+                    defaultValue={"N/A"}
                   />
                 </Grid>
                 <Grid item style={{ marginTop: 16 }}>

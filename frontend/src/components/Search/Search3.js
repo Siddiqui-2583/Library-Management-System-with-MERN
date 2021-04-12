@@ -51,7 +51,7 @@ const Search = (props) => {
     }
     
     axios
-      .get("/books/"+filterOption+"/"+keyword)
+      .get("/books/hints/"+filterOption+"/"+keyword)
       .then((response) => {
         // console.log(response.data.slice(0, 5));
         setHint(response.data);
@@ -62,44 +62,51 @@ const Search = (props) => {
   
   const handleSearchResult = () => {
     console.log(filterOption, autoCompleteValue);
+    axios
+      .get("/books/searchResult/" + filterOption + "/" + autoCompleteValue)
+      .then((response) => {
+        console.log(response);
+        // setDisplayedBooks(response.data);
+      })
+      .catch((err) => console.log(err));
     // searchResult = data
     //   .slice(0, 300)
     //   .filter(`(item) => item.${filterOption} === ${autoCompleteValue}`);  
     
-    switch (filterOption) {
-      // case "everywhere":
-      //   searchResult = [];
-      //   break;
-      case "title":
-        searchResult = data
-          .filter((item) => item.title === autoCompleteValue);
-        break;
-      case "writer":
-        searchResult = data
-          .filter((item) => item.writer === autoCompleteValue);
-        break;
-      case "publisher":
-        searchResult = data
-          .filter((item) => item.publisher === autoCompleteValue);
-        break;
-      case "category":
-        searchResult = data
-          .filter((item) => item.category === autoCompleteValue);
-        break;
-      case "almira":
-        searchResult = data
-          .filter((item) => item.almira === autoCompleteValue);
-        break;
-      case "isbn":
-        searchResult = data
-          .filter((item) => item.isbn === autoCompleteValue);
-        break;
-      default:
-        break;
-    }
-    console.log(searchResult);
-    // // getSearchResult(searchResult)
-    setDisplayedBooks(searchResult);
+    // switch (filterOption) {
+    //   // case "everywhere":
+    //   //   searchResult = [];
+    //   //   break;
+    //   case "title":
+    //     searchResult = data
+    //       .filter((item) => item.title === autoCompleteValue);
+    //     break;
+    //   case "writer":
+    //     searchResult = data
+    //       .filter((item) => item.writer === autoCompleteValue);
+    //     break;
+    //   case "publisher":
+    //     searchResult = data
+    //       .filter((item) => item.publisher === autoCompleteValue);
+    //     break;
+    //   case "category":
+    //     searchResult = data
+    //       .filter((item) => item.category === autoCompleteValue);
+    //     break;
+    //   case "almira":
+    //     searchResult = data
+    //       .filter((item) => item.almira === autoCompleteValue);
+    //     break;
+    //   case "isbn":
+    //     searchResult = data
+    //       .filter((item) => item.isbn === autoCompleteValue);
+    //     break;
+    //   default:
+    //     break;
+    // }
+    // console.log(searchResult);
+    // // // getSearchResult(searchResult)
+    // setDisplayedBooks(searchResult);
   };
 
   return (
