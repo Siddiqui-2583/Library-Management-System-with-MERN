@@ -5,42 +5,15 @@ import { TextField } from "final-form-material-ui";
 import {
   Typography,
   Paper,
+  Link,
   Grid,
   Button,
   CssBaseline,
 } from "@material-ui/core";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
-let bookId = null;
-const onSubmit = async (values) => {
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  await sleep(300);
-  window.alert(JSON.stringify(values, 0, 2));
-  console.log(values);
-  // console.log(typeof (values));
 
-  // const response = await axios.put("/books/edit/" + _id, values);
-  // console.log(response)
-  //  axios
-  //    .put("/books/edit/" + _id)
-  //    .then((response) => {
-  //      console.log(title + " (" + id + ") " + " Edited");
-  //    })
-  //    .catch((err) => console.log(err));
-  fetch(" / books / edit / " + bookId, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(values),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-      window.alert(data.title + " Edited!");
-    });
-};
+
 const validate = (values) => {
   const errors = {};
   if (!values.title) {
@@ -50,7 +23,7 @@ const validate = (values) => {
     errors.writer = "Required";
   }
   if (!values.category) {
-    errors.category = "Required";
+    errors.email = "Required";
   }
   if (!values.publisher) {
     errors.publisher = "Required";
@@ -61,8 +34,8 @@ const validate = (values) => {
 function Add(props) {
   
   const {
-    _id,
-   title,
+    id,
+    title,
     writer,
     category,
     publisher,
@@ -74,9 +47,28 @@ function Add(props) {
     description,
     price,
   } = props.clickedBook;
-  
-  bookId = _id;
+// console.log(props.clickedBook);
+const onSubmit = async (values) => {
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  await sleep(300);
+  window.alert(JSON.stringify(values, 0, 2));
+  console.log(values);
+  // console.log(id);
 
+  fetch("http://localhost:5000/books/edit/" + id, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(values),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      // console.log(data);
+      window.alert(data.title + " Edited!");
+    });
+  };
+  
   return (
     <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
       <CssBaseline />

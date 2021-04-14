@@ -27,11 +27,17 @@ import { createBrowserHistory } from "history";
 import HomeIcon from "@material-ui/icons/Home";
 import InfoIcon from "@material-ui/icons/Info";
 import Add from "../AddNewBook/AddNewBook.js";
+import orange from "@material-ui/core/colors/orange";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
+  palette: {
+    primary: orange,
+    secondary: orange,
+  },
   root: {
     flexGrow: 1,
+    background: orange
   },
   title: {
     flexGrow: 1,
@@ -118,6 +124,7 @@ export default function PersistentDrawerLeft() {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
+        style={{ background: "#2E3B55" }}
         position="absolute"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open,
@@ -142,12 +149,12 @@ export default function PersistentDrawerLeft() {
             <Link
               to="/"
               onClick={reload}
-            className={classes.link}
-            style={{ textDecoration: "none", color: "white" }}
-          >
+              className={classes.link}
+              style={{ textDecoration: "none", color: "white" }}
+            >
               আব্দুল জলিল সাহিত্য ও সাংস্কৃতিক কেন্দ্র
-              </Link>
-            </Typography>
+            </Link>
+          </Typography>
           {/* </Link> */}
           <FormGroup>
             <FormControlLabel

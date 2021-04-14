@@ -37,147 +37,82 @@ const useStyles = makeStyles((theme) => ({
 
 const Search = (props) => {
   // const [data, setDisplayedBooks] =useContext(BookContext);
-  let { data, setDisplayedBooks } = props;
+  let { data, setDisplayedBooks,setLoading } = props;
   const classes = useStyles();
   const [filterOption, setFilterOption] = useState();
   const [autoCompleteValue, setAutoCompleteValue] = useState();
   const [hint, setHint] = useState([]);
   let searchResult;
 
-  const handleHint = (filter,keyword) => {
+  const handleHint = (filterOption, keyword) => {
+    if (keyword === "") {
+      setHint([])
+      return;
+    }
+    
     axios
-      .get("/books/:keyword")
+      .get("/books/hints/"+filterOption+"/"+keyword)
       .then((response) => {
-        //console.log(response.data);
-        setHint();
+        // console.log(response.data.slice(0, 5));
+        setHint(response.data);
       })
       .catch((err) => console.log(err));
   };
 
-  const handleFilterSelection = (event) => {
-    setFilterOption(event.target.value);
-    const key = event.target.value;
-    console.log(key);
-    // let query = 'Allah'
-    // setHint(`${data}.slice(0, 300).map((item) => item.${key})`);
-    // const queryResult = data.filter(book => book.writer.includes(query) );
-    // console.log(queryResult)
-    // console.log(`data.slice(0, 300).map((item) => item.${key})`);
-    switch (key) {
-      case "everywhere":
-        setHint([]);
-        break;
-      case "title":
-        setHint(data.slice(0, 300).map((item) => item.title));
-        break;
-      case "writer":
-        setHint(data.slice(0, 300).map((item) => item.writer));
-        break;
-      case "publisher":
-        setHint(data.slice(0, 300).map((item) => item.publisher));
-        break;
-      case "category":
-        setHint(data.slice(0, 300).map((item) => item.category));
-        break;
-      case "almira":
-        setHint(data.slice(0, 300).map((item) => item.almira));
-        break;
-      case "isbn":
-        setHint(data.slice(0, 300).map((item) => item.isbn));
-        break;
-      default:
-        break;
-    }
-  };
-  const handleAutoComplete = (value) => {
-    console.log("keyword for auto complete hint: " + value);
-    setAutoCompleteValue(value)
-    // let match = data.slice(0, 300).includes(value);
-    // setHint(match)
-    // let matches = data.filter(book => {
-    //   const regex = new RegExp(`^${value}`, 'gi');
-    //   return book.writer.match(regex) || book.abbr.match(regex)
-    // })
-    // if (value.length === 0) {
-    //   matches=[]
-    // }
-    // let matches = data.writer.map((book) => book.includes("Allah"));
-    // let x=matches.map(book => book.includes('Allah'))
-    // console.log(matches)
-    
-    // console.log(`data.slice(0, 300).map((item) => item.${key})`);
-    // switch (value) {
-    //   case "everywhere":
-    //     setHint([]);
-    //     break;
-    //   case "title":
-    //     setHint(data.slice(0, 300).map((item) => item.title));
-    //     break;
-    //   case "writer":
-    //     setHint(data.slice(0, 300).map((item) => item.writer));
-    //     break;
-    //   case "publisher":
-    //     setHint(data.slice(0, 300).map((item) => item.publisher));
-    //     break;
-    //   case "category":
-    //     setHint(data.slice(0, 300).map((item) => item.category));
-    //     break;
-    //   case "almira":
-    //     setHint(data.slice(0, 300).map((item) => item.almira));
-    //     break;
-    //   case "isbn":
-    //     setHint(data.slice(0, 300).map((item) => item.isbn));
-    //     break;
-    //   default:
-    //     break;
-    // }
-  }
+  
   const handleSearchResult = () => {
     console.log(filterOption, autoCompleteValue);
+    setLoading("block");
+    axios
+      .get("/books/searchResult/" + filterOption + "/" + autoCompleteValue)
+      .then((response) => {
+        console.log(response);
+        setDisplayedBooks(response.data);
+        setLoading("none");
+      })
+      .catch((err) => console.log(err));
+
+
+
+
     // searchResult = data
     //   .slice(0, 300)
     //   .filter(`(item) => item.${filterOption} === ${autoCompleteValue}`);  
     
-    switch (filterOption) {
-      case "everywhere":
-        searchResult = [];
-        break;
-      case "title":
-        searchResult = data
-          .slice(0, 300)
-          .filter((item) => item.title === autoCompleteValue);
-        break;
-      case "writer":
-        searchResult = data
-          .slice(0, 300)
-          .filter((item) => item.writer === autoCompleteValue);
-        break;
-      case "publisher":
-        searchResult = data
-          .slice(0, 300)
-          .filter((item) => item.publisher === autoCompleteValue);
-        break;
-      case "category":
-        searchResult = data
-          .slice(0, 300)
-          .filter((item) => item.category === autoCompleteValue);
-        break;
-      case "almira":
-        searchResult = data
-          .slice(0, 300)
-          .filter((item) => item.almira === autoCompleteValue);
-        break;
-      case "isbn":
-        searchResult = data
-          .slice(0, 300)
-          .filter((item) => item.isbn === autoCompleteValue);
-        break;
-      default:
-        break;
-    }
+    // switch (filterOption) {
+    //   // case "everywhere":
+    //   //   searchResult = [];
+    //   //   break;
+    //   case "title":
+    //     searchResult = data
+    //       .filter((item) => item.title === autoCompleteValue);
+    //     break;
+    //   case "writer":
+    //     searchResult = data
+    //       .filter((item) => item.writer === autoCompleteValue);
+    //     break;
+    //   case "publisher":
+    //     searchResult = data
+    //       .filter((item) => item.publisher === autoCompleteValue);
+    //     break;
+    //   case "category":
+    //     searchResult = data
+    //       .filter((item) => item.category === autoCompleteValue);
+    //     break;
+    //   case "almira":
+    //     searchResult = data
+    //       .filter((item) => item.almira === autoCompleteValue);
+    //     break;
+    //   case "isbn":
+    //     searchResult = data
+    //       .filter((item) => item.isbn === autoCompleteValue);
+    //     break;
+    //   default:
+    //     break;
+    // }
     // console.log(searchResult);
-    // // getSearchResult(searchResult)
-    setDisplayedBooks(searchResult);
+    // // // getSearchResult(searchResult)
+    // setDisplayedBooks(searchResult);
   };
 
   return (
@@ -193,7 +128,7 @@ const Search = (props) => {
               <Select
                 labelId="demo-simple-select-outlined-label"
                 id="demo-simple-select-outlined"
-                onChange={handleFilterSelection}
+                onChange={(event) => {setFilterOption(event.target.value)                }}
                 label="Select Filter Option"
               >
                 {/* <MenuItem value={"everywhere"}>Search Everywhere</MenuItem> */}
@@ -214,7 +149,7 @@ const Search = (props) => {
               id="free-solo-2-demo"
               disableClearable
               onChange={(event, newValue) => {
-                handleAutoComplete(newValue);
+                setAutoCompleteValue(newValue);
               }}
               renderInput={(params) => (
                 <TextField
@@ -223,7 +158,9 @@ const Search = (props) => {
                   margin="normal"
                   variant="outlined"
                   onChange={(event) => {
-                    handleAutoComplete(event.target.value);
+                    // setAutoCompleteValue(event.target.value)
+                    console.log(filterOption, event.target.value);
+                    handleHint(filterOption,event.target.value);
                   }}
                 />
               )}

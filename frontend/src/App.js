@@ -1,14 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Header from "./components/Header/Header.js";
-import Search from "./components/Search/Search3.js";
+import Search from "./components/Search/Search.js";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Table from "./components/Table/Table.js";
 import AddNewBook from "./components/AddNewBook/AddNewBook.js";
 import "./app.css";
-import Search2 from "./components/Search/Search2.js";
-import EditBook from "./components/EditBook/EditBook2.js";
+import EditBook from "./components/EditBook/EditBook.js";
 import MoreInfo from "./components/MoreInfo/MoreInfo.js";
 const App = () => {
   let searchedBooks;
@@ -43,6 +42,7 @@ const App = () => {
             <Search
               data={data}
               displayBooks={displayBooks}
+              setLoading={setLoading}
               setDisplayedBooks={setDisplayedBooks}
             />
             {/* {loading === "block" ? 

@@ -8,11 +8,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import * as ReactBootstrap from "react-bootstrap";
 import Loading from "../Loading/Loading.js";
-import Details from "../Details/Details.js";
 import PropTypes from "prop-types";
-import Popover from "@material-ui/core/Popover";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -87,7 +84,7 @@ export default function StickyHeadTable(props) {
     axios
       .delete("/books/delete/" + id)
       .then((response) => {
-        console.log(response.data.title + " deleted successfully!");
+        window.alert(response.data.title + " deleted successfully!");
       })
       .catch((err) => console.log(err));
   };

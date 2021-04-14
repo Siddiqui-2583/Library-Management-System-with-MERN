@@ -3,7 +3,7 @@ import Book from '../models/book.js'
 export const getAllBooks = async (req, res) => {
   try {
     const book = await Book.find()
-      .then((data) => res.send(data))
+      .then((data) => res.send(data.slice(0, 150)))
       .catch((err) => console.log(err.message));
 
     res.status(200).json({ message: error.message });
@@ -130,50 +130,36 @@ export const getHint = async (req, res, next) => {
 export const getSearchResults = async (req, res, next) => {
   const filter = req.params.filter;
   const value = req.params.keyword;
-console.log('seacrch')
-  try {
-    let booksQuery = null;
-    // const books = await Book.find({`${filter}` : new RegExp(value,"i")});
-
-    switch (filter) {
-      // case "everywhere":
-      //   setHint([]);
-      //   break;
-      case "title":
-        booksQuery = Book.find({ title: new RegExp(value, "i") })
-        break;
-      case "writer":
-        booksQuery = Book.find({ writer: new RegExp(value, "i") })
-        break;
-      case "publisher":
-        booksQuery = Book.find({ publisher: new RegExp(value, "i") })
-        break;
-      case "category":
-        booksQuery = Book.find({ category: new RegExp(value, "i") })
-        break;
-      case "almira":
-        booksQuery = Book.find({ almira: new RegExp(value, "i") })
-        break;
-      case "isbn":
-        booksQuery = Book.find({ isbn: new RegExp(value, "i") })
-        break;
-      default:
-        booksQuery = null;
-        break;
-    }
-
-    if (booksQuery == null) {
-      res.send([]);
-      return;
-    }
-
-    // var books = await booksQuery.limit(10);
-    // var hints = books.map((b) => b[filter]);
-    res.send(booksQuery);
-    // console.log(hints);
-  } catch (err) {
-    console.log(err);
+  // console.log("search", filter, value);
+  // const books = await Book.find({`${filter}` : new RegExp(value,"i")});
+  let searchResult = null;
+  switch (filter) {
+    // case "everywhere":
+    //   setHint([]);
+    //   break;
+    case "title":
+      searchResult = await Book.find({ title: new RegExp(value, "i") });
+      break;
+    case "writer":
+      searchResult = await Book.find({ writer: new RegExp(value, "i") });
+      break;
+    case "publisher":
+      searchResult = await Book.find({ publisher: new RegExp(value, "i") });
+      break;
+    case "category":
+      searchResult = await Book.find({ category: new RegExp(value, "i") });
+      break;
+    case "almira":
+      searchResult = await Book.find({ almira: new RegExp(value, "i") });
+      break;
+    case "isbn":
+      searchResult = await Book.find({ isbn: new RegExp(value, "i") });
+      break;
+    default:
+      searchResult = [];
+      break;
   }
+  res.send(searchResult);
 };
 
 export const editBook = (req, res) => {
