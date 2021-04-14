@@ -1,8 +1,10 @@
+import { IBookRequest } from "../dto/bookResponse";
 import * as BookService from "./bookService";
 
-export const getAllBooks = async (_: any, res: any) => {
+export const getAllBooks = async (req: { query: IBookRequest }, res: any) => {
   try {
-    const books = await BookService.getAllBooks();
+    let bookRequest: IBookRequest = req.query;
+    const books = await BookService.getAllBooks(bookRequest);
     res.send(books);
   } catch (error) {
     console.log(error);
@@ -15,7 +17,6 @@ export const addBook = async (req: { body: any }, res: any) => {
 
   try {
     const savedBook = await BookService.createBook(bookObj);
-    console.log("Book saved in the database", savedBook);
     res.status(201).send(savedBook);
   } catch (error) {
     console.log(error);
@@ -35,18 +36,17 @@ export const getBook = async (req: { params: { id: string } }, res: any) => {
 };
 
 export const getHint = async (
-  req: { params: { filter: string; keyword: string } },
+  req: { query: { filter: string; keyword: string } },
   res: any
 ) => {
-  const filter = req.params.filter;
-  const value = req.params.keyword;
+  const { filter, keyword } = req.query;
 
   try {
-    const hints = await BookService.getBookHints(filter, value);
+    const hints = await BookService.getBookHints(filter, keyword);
     res.send(hints);
   } catch (error) {
     console.log(error);
-    res.status(500).send('An error occured!');
+    res.status(500).send("An error occured!");
   }
 };
 
@@ -67,7 +67,7 @@ export const editBook = async (
 
 export const deleteBook = async (req: { params: { id: string } }, res: any) => {
   const { id } = req.params;
-  try {    
+  try {
     const deletedBook = await BookService.deleteBook(id);
     res.send(deletedBook);
   } catch (error) {

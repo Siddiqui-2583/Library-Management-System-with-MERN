@@ -10,8 +10,9 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import * as BookService from "../../services/bookService";
 import "./Search.css";
-import axios from "axios";
+
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginTop: theme.spacing(2),
@@ -36,83 +37,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Search = (props) => {
-  // const [data, setDisplayedBooks] =useContext(BookContext);
-  let { data, setDisplayedBooks,setLoading } = props;
-  const classes = useStyles();
-  const [filterOption, setFilterOption] = useState();
-  const [autoCompleteValue, setAutoCompleteValue] = useState();
-  const [hint, setHint] = useState([]);
-  let searchResult;
+  let filterOptions = [
+    { key: "title", value: "Book title" },
+    { key: "writer", value: "Writer" },
+    { key: "category", value: "Category" },
+    { key: "publisher", value: "Publisher" },
+    // {"key": "almira", "value": "Almira"},
+    // {"key": "isbn", "value": "ISBN"}
+  ];
 
-  const handleHint = (filterOption, keyword) => {
-    if (keyword === "") {
-      setHint([])
-      return;
-    }
-    
-    axios
-      .get("/books/hints/"+filterOption+"/"+keyword)
-      .then((response) => {
-        // console.log(response.data.slice(0, 5));
-        setHint(response.data);
-      })
-      .catch((err) => console.log(err));
+  let { setFilter, setKeyword, setPageNumber } = props;
+  const classes = useStyles();
+  const [hint, setHint] = useState([]);
+  const [autoCompleteValue, setAutoCompleteValue] = useState("");
+  const [filterOption, setFilterOption] = useState(filterOptions[0].key);
+
+  const handleSearchResult = () => {
+    setPageNumber(0);
+    setFilter(filterOption);
+    setKeyword(autoCompleteValue);
   };
 
-  
-  const handleSearchResult = () => {
-    console.log(filterOption, autoCompleteValue);
-    setLoading("block");
-    axios
-      .get("/books/searchResult/" + filterOption + "/" + autoCompleteValue)
-      .then((response) => {
-        console.log(response);
-        setDisplayedBooks(response.data);
-        setLoading("none");
+  const handleHint = () => {
+    if (autoCompleteValue === "") {
+      setHint([]);
+      return;
+    }
+
+    BookService.GetBookHints(filterOption, autoCompleteValue)
+      .then((bookHints) => {
+        setHint(bookHints);
       })
       .catch((err) => console.log(err));
-
-
-
-
-    // searchResult = data
-    //   .slice(0, 300)
-    //   .filter(`(item) => item.${filterOption} === ${autoCompleteValue}`);  
-    
-    // switch (filterOption) {
-    //   // case "everywhere":
-    //   //   searchResult = [];
-    //   //   break;
-    //   case "title":
-    //     searchResult = data
-    //       .filter((item) => item.title === autoCompleteValue);
-    //     break;
-    //   case "writer":
-    //     searchResult = data
-    //       .filter((item) => item.writer === autoCompleteValue);
-    //     break;
-    //   case "publisher":
-    //     searchResult = data
-    //       .filter((item) => item.publisher === autoCompleteValue);
-    //     break;
-    //   case "category":
-    //     searchResult = data
-    //       .filter((item) => item.category === autoCompleteValue);
-    //     break;
-    //   case "almira":
-    //     searchResult = data
-    //       .filter((item) => item.almira === autoCompleteValue);
-    //     break;
-    //   case "isbn":
-    //     searchResult = data
-    //       .filter((item) => item.isbn === autoCompleteValue);
-    //     break;
-    //   default:
-    //     break;
-    // }
-    // console.log(searchResult);
-    // // // getSearchResult(searchResult)
-    // setDisplayedBooks(searchResult);
   };
 
   return (
@@ -128,16 +84,15 @@ const Search = (props) => {
               <Select
                 labelId="demo-simple-select-outlined-label"
                 id="demo-simple-select-outlined"
-                onChange={(event) => {setFilterOption(event.target.value)                }}
+                onChange={(event) => {
+                  setFilterOption(event.target.value);
+                }}
                 label="Select Filter Option"
+                defaultValue={filterOptions[0].key}
               >
-                {/* <MenuItem value={"everywhere"}>Search Everywhere</MenuItem> */}
-                <MenuItem value={"title"}>Book title</MenuItem>
-                <MenuItem value={"writer"}>Writer</MenuItem>
-                <MenuItem value={"category"}>Category</MenuItem>
-                <MenuItem value={"publisher"}>Publisher</MenuItem>
-                {/* <MenuItem value={"almira"}>Almira</MenuItem>
-                <MenuItem value={"isbn"}>ISBN</MenuItem> */}
+                {filterOptions.map((option) => {
+                  return <MenuItem value={option.key}>{option.value}</MenuItem>;
+                })}
               </Select>
             </FormControl>
           </ReactBootstrap.Col>
@@ -158,16 +113,15 @@ const Search = (props) => {
                   margin="normal"
                   variant="outlined"
                   onChange={(event) => {
-                    // setAutoCompleteValue(event.target.value)
-                    console.log(filterOption, event.target.value);
-                    handleHint(filterOption,event.target.value);
+                    setAutoCompleteValue(event.target.value);
+                    handleHint();
                   }}
                 />
               )}
             />
           </ReactBootstrap.Col>
           <ReactBootstrap.Col xs={12} sm={12} md={12} lg={4}>
-            <Button className={classes.button} onClick={() => handleSearchResult()}>
+            <Button className={classes.button} onClick={handleSearchResult}>
               Search
             </Button>
           </ReactBootstrap.Col>

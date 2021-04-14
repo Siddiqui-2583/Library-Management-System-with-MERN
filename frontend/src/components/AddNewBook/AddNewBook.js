@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { Form, Field } from "react-final-form";
 import { TextField } from "final-form-material-ui";
 import {
@@ -10,33 +9,12 @@ import {
   Button,
   CssBaseline,
 } from "@material-ui/core";
-import axios from "axios";
+import * as BookService from "../../services/bookService";
 
 const onSubmit = async (values) => {
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  await sleep(300);
-  window.alert(JSON.stringify(values, 0, 2));
-  console.log(values);
-  // axios
-  //   .post("http://localhost:5000/add-new-book", {values})
-  //   .then((res) => {
-  //     console.log(res)
-  //     window.alert(res.title + " added to database!");
-  //   })
-  //   .catch((err) => console.log(err));
-
-  fetch("http://localhost:5000/add-new-book", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(values),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      console.log(data);
-      window.alert(data.title+ " added to database!");
-    });
+  BookService.CreateBook(values).then((newBook) => {
+    window.alert(newBook.title + " is created!");
+  });
 };
 const validate = (values) => {
   const errors = {};
@@ -54,9 +32,7 @@ const validate = (values) => {
   }
   return errors;
 };
-const postNewBook = async (values) => {
-  console.log({ values });
-};
+
 function Add() {
   return (
     <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>

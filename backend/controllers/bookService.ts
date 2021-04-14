@@ -1,7 +1,30 @@
 import { IBook, Book } from "../models/book";
+import { IBookRequest, IBookResponse } from "../dto/bookResponse";
+import { escapeRegExp } from "../utils/stringUtil";
 
-export const getAllBooks = async function (): Promise<IBook[]> {
-  return await Book.find().limit(10);
+export const getAllBooks = async function (
+  bookRequest: IBookRequest
+): Promise<IBookResponse> {
+  let query: any = {};
+  if (bookRequest.filter) {
+    var escapedKeyword = escapeRegExp(bookRequest.keyword);
+    query[bookRequest.filter] = new RegExp(escapedKeyword, "i");
+  }
+
+  let bookQuery = Book.find(query);
+  const pageNumber = bookRequest.pageNumber || 0;
+  const pageSize = bookRequest.pageSize || 10;
+  const offset = pageNumber * pageSize;
+  const books = await bookQuery.skip(offset).limit(+pageSize);
+  const totalBooks = await Book.find(query).countDocuments();
+  const bookResponse: IBookResponse = {
+    books: books,
+    totalBookCount: totalBooks,
+    pageNumber: pageNumber,
+    booksPerPage: pageSize,
+  };
+
+  return bookResponse;
 };
 
 export const getBookById = async function (bookId: any): Promise<IBook | null> {
@@ -13,7 +36,8 @@ export const getBookHints = async function (
   value: string
 ): Promise<string[]> {
   const query: any = {};
-  query[filter] = new RegExp(value, "i");
+  var escapedvalue = escapeRegExp(value);
+  query[filter] = new RegExp(escapedvalue, "i");
 
   const selectQuery = filter + " -_id";
   const booksQuery = Book.find(query).select(selectQuery);

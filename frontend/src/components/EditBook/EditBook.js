@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { Form, Field } from "react-final-form";
 import { TextField } from "final-form-material-ui";
 import {
@@ -10,9 +9,7 @@ import {
   Button,
   CssBaseline,
 } from "@material-ui/core";
-import axios from "axios";
-
-
+import * as BookService from "../../services/bookService";
 
 const validate = (values) => {
   const errors = {};
@@ -31,44 +28,14 @@ const validate = (values) => {
   return errors;
 };
 
-function Add(props) {
-  
-  const {
-    id,
-    title,
-    writer,
-    category,
-    publisher,
-    almira,
-    shelf,
-    isbn,
-    totalPage,
-    yearOfPublication,
-    description,
-    price,
-  } = props.clickedBook;
-// console.log(props.clickedBook);
-const onSubmit = async (values) => {
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  await sleep(300);
-  window.alert(JSON.stringify(values, 0, 2));
-  console.log(values);
-  // console.log(id);
-
-  fetch("http://localhost:5000/books/edit/" + id, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(values),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      // console.log(data);
-      window.alert(data.title + " Edited!");
+function EditBook(props) {
+  const booksToUpdate = props.clickedBook;
+  const onSubmit = async (values) => {
+    BookService.UpdateBook(booksToUpdate._id, values).then((updatedBook) => {      
+      window.alert(updatedBook.title + " updated!");
     });
   };
-  
+
   return (
     <div style={{ padding: 16, margin: "auto", maxWidth: 600 }}>
       <CssBaseline />
@@ -97,7 +64,7 @@ const onSubmit = async (values) => {
                     component={TextField}
                     type="text"
                     label="বইয়ের নাম"
-                    defaultValue={title}
+                    defaultValue={booksToUpdate.title}
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -108,7 +75,7 @@ const onSubmit = async (values) => {
                     component={TextField}
                     type="text"
                     label="লেখক/লেখিকা"
-                    defaultValue={writer}
+                    defaultValue={booksToUpdate.writer}
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -119,7 +86,7 @@ const onSubmit = async (values) => {
                     component={TextField}
                     type="text"
                     label="ক্যাটাগরি"
-                    defaultValue={category}
+                    defaultValue={booksToUpdate.category}
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -130,7 +97,7 @@ const onSubmit = async (values) => {
                     component={TextField}
                     type="text"
                     label="প্রকাশনী"
-                    defaultValue={publisher}
+                    defaultValue={booksToUpdate.publisher}
                   />
                 </Grid>
                 <Grid item xs={12} lg={12}>
@@ -142,7 +109,7 @@ const onSubmit = async (values) => {
                     label="সংক্ষিপ্ত বর্ণ্না"
                     multiline
                     rows={4}
-                    defaultValue={"N/A"}
+                    defaultValue={booksToUpdate.description}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -152,7 +119,7 @@ const onSubmit = async (values) => {
                     name="almira"
                     component={TextField}
                     // type="number"
-                    defaultValue={"N/A"}
+                    defaultValue={booksToUpdate.almira}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -162,7 +129,7 @@ const onSubmit = async (values) => {
                     name="shelf"
                     component={TextField}
                     // type="number"
-                    defaultValue={"N/A"}
+                    defaultValue={booksToUpdate.shelf}
                   />
                 </Grid>
 
@@ -173,7 +140,7 @@ const onSubmit = async (values) => {
                     name="isbn"
                     component={TextField}
                     type="text"
-                    defaultValue={"N/A"}
+                    defaultValue={booksToUpdate.isbn}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -183,7 +150,7 @@ const onSubmit = async (values) => {
                     name="yearOfPublication"
                     component={TextField}
                     type="text"
-                    defaultValue={"N/A"}
+                    defaultValue={booksToUpdate.yearOfPublication}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -193,7 +160,7 @@ const onSubmit = async (values) => {
                     name="totalPage"
                     component={TextField}
                     // type="number"
-                    defaultValue={"N/A"}
+                    defaultValue={booksToUpdate.totalPage}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -203,7 +170,7 @@ const onSubmit = async (values) => {
                     name="price"
                     component={TextField}
                     // type="number"
-                    defaultValue={"N/A"}
+                    defaultValue={booksToUpdate.price}
                   />
                 </Grid>
                 <Grid item style={{ marginTop: 16 }}>
@@ -237,4 +204,4 @@ const onSubmit = async (values) => {
   );
 }
 
-export default Add;
+export default EditBook;

@@ -15,18 +15,13 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import { FormGroup } from "@material-ui/core";
 import Switch from "@material-ui/core/Switch";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
-import { Router, Route, Link } from "react-router-dom";
-import AddNewBook from "../AddNewBook/AddNewBook";
-import { createBrowserHistory } from "history";
+import { Link } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
 import InfoIcon from "@material-ui/icons/Info";
-import Add from "../AddNewBook/AddNewBook.js";
 import orange from "@material-ui/core/colors/orange";
 const drawerWidth = 240;
 
@@ -37,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     flexGrow: 1,
-    background: orange
+    background: orange,
   },
   title: {
     flexGrow: 1,
@@ -112,13 +107,13 @@ export default function PersistentDrawerLeft() {
   };
   const reload = () => {
     window.location.reload(false);
-  }
+  };
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const [toogle,setToogle] = React.useState(true)
+  const [toogle, setToogle] = React.useState(true);
   const handleChange = (event) => {
-    setToogle(event.target.checked)
+    setToogle(event.target.checked);
   };
   return (
     <div className={classes.root}>

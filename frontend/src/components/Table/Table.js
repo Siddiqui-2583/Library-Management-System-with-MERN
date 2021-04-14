@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -15,38 +15,41 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-// const useStyles = makeStyles((theme) => ({
-//   typography: {
-//     padding: theme.spacing(2),
-//   },
-// }));
+import * as BookService from "../../services/bookService.js";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
 export default function StickyHeadTable(props) {
   const [openDialogue, setOpenDialogue] = React.useState(false);
+  let bookIdToDelete = "";
 
-  const handleClickOpenDialogue = () => {
+  const handleClickOpenDialogue = (bookId) => {
+    bookIdToDelete = bookId;
     setOpenDialogue(true);
   };
 
-  const handleCloseDialogue = () => {
-    setOpenDialogue(false);
-  };
+  const handleCloseDialogue = () => setOpenDialogue(false);
 
-  let { setClickedBook } = props;
-  
+  let {
+    books,
+    setClickedBook,
+    setPage,
+    setBooksPerPage,
+    totalBookCount,
+    booksPerPage,
+    pageNumber,
+    setDeletedBookId,
+    loading,
+  } = props;
 
-  
   const useStyles = makeStyles((theme) => ({
     root: {
       width: "100%",
@@ -61,35 +64,29 @@ export default function StickyHeadTable(props) {
     extendedIcon: {
       marginRight: theme.spacing.unit,
     },
-    
   }));
 
-  //let data = props.data;
   const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+    setBooksPerPage(+event.target.value);
   };
 
-  const handleDelete = (id) => {
-    console.log(id,);
-    setOpenDialogue(false)
-    axios
-      .delete("/books/delete/" + id)
-      .then((response) => {
-        window.alert(response.data.title + " deleted successfully!");
+  const handleDelete = () => {
+    setOpenDialogue(false);
+    BookService.DeleteBook(bookIdToDelete)
+      .then((deletedBook) => {
+        setDeletedBookId(bookIdToDelete);
+        window.alert(deletedBook.title + " deleted successfully!");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        window.alert("The book could not be deleted!");
+      });
   };
-  // console.log(data);
-  // console.log(props.data);
 
   const columns = [
     { id: "title", label: "বই", align: "left" },
@@ -106,59 +103,6 @@ export default function StickyHeadTable(props) {
     // { id: "price", label: "Price", align: "center" },
     // { id: "action", label: "Action", align: "center" },
   ];
-
-
-
-  function createData(
-    id,
-    title,
-    writer,
-    category,
-    publisher,
-    almira,
-    shelf,
-    isbn,
-    totalPage,
-    yearOfPublication,
-    description,
-    price,
-  ) {
-    return {
-      id,
-      title,
-      writer,
-      category,
-      publisher,
-      almira,
-      shelf,
-      isbn,
-      totalPage,
-      yearOfPublication,
-      description,
-      price,
-     
-    };
-  }
-  const rows = [];
-  props.data.forEach((book) => {
-    rows.push(
-      createData(
-        book._id,
-        book.title,
-        book.writer,
-        book.category,
-        book.publisher,
-        book.almira,
-        book.shelf,
-        book.isbn,
-        book.totalPage,
-        book.yearOfPublication,
-        book.description,
-        book.price,
-      )
-    );
-    
-  });
 
   return (
     <div className="container-fluid">
@@ -181,119 +125,106 @@ export default function StickyHeadTable(props) {
                   <TableCell align="right">Action</TableCell>
                 </TableRow>
               </TableHead>
-              {props.loading === "block" ? (
+              {loading ? (
                 <div className="load">
                   <Loading />
                 </div>
               ) : (
                 <TableBody>
-                  {rows
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row) => {
-                      // console.log(row)
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          tabIndex={-1}
-                          key={row.code}
-                        >
-                          {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === "number"
-                                  ? column.format(value)
-                                  : value}
-                              </TableCell>
-                            );
-                          })}
-                          <TableCell align="right">
-                            <Link
-                              to="/more-info"
-                              style={{ textDecoration: "none", color: "black" }}
-                            >
-                              <Button
-                                size="small"
-                                variant="outlined"
-                                onClick={() => {
-                                  setClickedBook(row);
-                                }}
-                              >
-                                More info
-                              </Button>
-                            </Link>
-                          </TableCell>
-                          <TableCell align="right">
-                            <Link to="/edit-book">
-                              <IconButton
-                                aria-label="edit"
-                                onClick={() => {
-                                  setClickedBook(row);
-                                }}
-                                className={classes.margin}
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </Link>
-                            <IconButton
-                              aria-label="delete"
+                  {books.map((book) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={book._id}
+                      >
+                        {columns.map((column) => {
+                          const value = book[column.id];
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.format && typeof value === "number"
+                                ? column.format(value)
+                                : value}
+                            </TableCell>
+                          );
+                        })}
+                        <TableCell align="right">
+                          <Link
+                            to="/more-info"
+                            style={{ textDecoration: "none", color: "black" }}
+                          >
+                            <Button
+                              size="small"
+                              variant="outlined"
                               onClick={() => {
-                                // handleDelete(row.id);
-                                handleClickOpenDialogue();
+                                setClickedBook(book);
+                              }}
+                            >
+                              More info
+                            </Button>
+                          </Link>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Link to="/edit-book">
+                            <IconButton
+                              aria-label="edit"
+                              onClick={() => {
+                                setClickedBook(book);
                               }}
                               className={classes.margin}
                             >
-                              <DeleteIcon fontSize="small" />
+                              <EditIcon fontSize="small" />
                             </IconButton>
-                            <Dialog
-                              open={openDialogue}
-                              TransitionComponent={Transition}
-                              keepMounted
-                              onClose={handleCloseDialogue}
-                              aria-labelledby="alert-dialog-slide-title"
-                              aria-describedby="alert-dialog-slide-description"
-                            >
-                              <DialogTitle id="alert-dialog-slide-title">
-                                {"Delete Book"}
-                              </DialogTitle>
-                              <DialogContent>
-                                <DialogContentText id="alert-dialog-slide-description">
-                                  Do you really want to delete this book?
-                                </DialogContentText>
-                              </DialogContent>
-                              <DialogActions>
-                                <Button
-                                  onClick={handleCloseDialogue}
-                                  color="primary"
-                                >
-                                  No
-                                </Button>
-                                <Button
-                                  onClick={() => {
-                                    handleDelete(row.id);
-                                    
-                                  }}
-                                  color="primary"
-                                >
-                                  Yes
-                                </Button>
-                              </DialogActions>
-                            </Dialog>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                          </Link>
+                          <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                              handleClickOpenDialogue(book._id);
+                            }}
+                            className={classes.margin}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               )}
             </Table>
           </TableContainer>
+          <Dialog
+            open={openDialogue}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={handleCloseDialogue}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle id="alert-dialog-slide-title">
+              {"Delete Book"}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                Do you really want to delete this book?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialogue} color="primary">
+                No
+              </Button>
+              <Button onClick={handleDelete} color="primary">
+                Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
           <TablePagination
             rowsPerPageOptions={[10, 25, 100]}
             component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
+            count={+totalBookCount}
+            rowsPerPage={+booksPerPage}
+            page={+pageNumber}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />

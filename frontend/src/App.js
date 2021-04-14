@@ -3,35 +3,36 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Header from "./components/Header/Header.js";
 import Search from "./components/Search/Search.js";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Table from "./components/Table/Table.js";
 import AddNewBook from "./components/AddNewBook/AddNewBook.js";
 import "./app.css";
 import EditBook from "./components/EditBook/EditBook.js";
 import MoreInfo from "./components/MoreInfo/MoreInfo.js";
+import * as BookService from "./services/bookService.js";
 const App = () => {
-  let searchedBooks;
-  const [data, setData] = useState([]);
-  const [displayBooks, setDisplayedBooks] = useState([]);
-  const [clickedBook, setClickedBook] = useState();
-  const [loading, setLoading] = useState("block");
-  // console.log(clickedBook)
-  useEffect(() => {
-    axios
-      .get("/books")
-      .then((response) => {
-        //console.log(response.data);
-        setData(response.data);
-        setDisplayedBooks(response.data);
-        setLoading("none");
-      })
-      .catch((err) => console.log(err));
+  const [loading, setLoading] = useState(false);
+  const [books, setBooks] = useState([]);
+  const [clickedBook, setClickedBook] = useState({});
+  const [booksPerPage, setBooksPerPage] = useState(10);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalBooks, setTotalBooks] = useState(0);
+  const [filter, setFilter] = useState("");
+  const [keyword, setKeyword] = useState("");
+  const [deletedBookId, setDeletedBookId] = useState(0);
 
-    if (!searchedBooks) {
-      setDisplayedBooks(data);
-      
-    }
-  }, []);
+  useEffect(() => {
+    setLoading(true);
+    BookService.GetBooks(filter, keyword, pageNumber, booksPerPage)
+      .then((bookResponse) => {
+        setLoading(false);
+        setBooks(bookResponse.books);
+        setTotalBooks(bookResponse.totalBookCount);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
+  }, [pageNumber, booksPerPage, deletedBookId, keyword]);
 
   return (
     <div>
@@ -40,21 +41,20 @@ const App = () => {
         <Switch>
           <Route exact path="/">
             <Search
-              data={data}
-              displayBooks={displayBooks}
-              setLoading={setLoading}
-              setDisplayedBooks={setDisplayedBooks}
+              setFilter={setFilter}
+              setKeyword={setKeyword}
+              setPageNumber={setPageNumber}
             />
-            {/* {loading === "block" ? 
-              <Loading loading={loading} />
-             : 
-              <Table data={displayBooks} />
-            } */}
-
             <Table
-              loading={loading}
-              data={displayBooks}
+              books={books}
               setClickedBook={setClickedBook}
+              setPage={setPageNumber}
+              setBooksPerPage={setBooksPerPage}
+              totalBookCount={totalBooks}
+              booksPerPage={booksPerPage}
+              pageNumber={pageNumber}
+              setDeletedBookId={setDeletedBookId}
+              loading={loading}
             />
           </Route>
           <Route path="/add-new-book">
