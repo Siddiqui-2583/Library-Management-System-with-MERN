@@ -29,10 +29,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function StickyHeadTable(props) {
   const [openDialogue, setOpenDialogue] = React.useState(false);
-  let bookIdToDelete = "";
+  let [bookIdToDelete, setBookIdToDelete] = React.useState("");
 
   const handleClickOpenDialogue = (bookId) => {
-    bookIdToDelete = bookId;
+    setBookIdToDelete(bookId);
     setOpenDialogue(true);
   };
 
