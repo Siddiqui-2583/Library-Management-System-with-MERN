@@ -10,12 +10,17 @@ import {
   CssBaseline,
 } from "@material-ui/core";
 import * as BookService from "../../services/bookService";
+import {NotifySuccess, NotifyError} from "../../common/notification"
 
 const onSubmit = async (values) => {
   BookService.CreateBook(values).then((newBook) => {
-    window.alert(newBook.title + " is created!");
+    NotifySuccess(newBook.title + " is created!");
+  }).catch((error)=>{
+    console.log(error);
+    NotifyError("Book could not be created!");
   });
 };
+
 const validate = (values) => {
   const errors = {};
   if (!values.title) {

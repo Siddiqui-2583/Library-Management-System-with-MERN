@@ -10,6 +10,7 @@ import {
   CssBaseline,
 } from "@material-ui/core";
 import * as BookService from "../../services/bookService";
+import {NotifySuccess, NotifyError} from "../../common/notification"
 
 const validate = (values) => {
   const errors = {};
@@ -31,8 +32,11 @@ const validate = (values) => {
 function EditBook(props) {
   const booksToUpdate = props.clickedBook;
   const onSubmit = async (values) => {
-    BookService.UpdateBook(booksToUpdate._id, values).then((updatedBook) => {      
-      window.alert(updatedBook.title + " updated!");
+    BookService.UpdateBook(booksToUpdate._id, values).then((updatedBook) => {
+      NotifySuccess(updatedBook.title + " updated!");
+    }).catch((error)=>{
+      console.log(error);
+      NotifyError("Book could not be updated!");
     });
   };
 

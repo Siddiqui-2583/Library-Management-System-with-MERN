@@ -22,6 +22,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import * as BookService from "../../services/bookService.js";
+import { NotifySuccess, NotifyError } from "../../common/notification.js";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -80,11 +81,11 @@ export default function StickyHeadTable(props) {
     BookService.DeleteBook(bookIdToDelete)
       .then((deletedBook) => {
         setDeletedBookId(bookIdToDelete);
-        window.alert(deletedBook.title + " deleted successfully!");
+        NotifySuccess(deletedBook.title + " deleted successfully!");
       })
       .catch((err) => {
         console.log(err);
-        window.alert("The book could not be deleted!");
+        NotifyError("The book could not be deleted!");
       });
   };
 

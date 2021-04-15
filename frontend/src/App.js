@@ -9,6 +9,8 @@ import "./app.css";
 import EditBook from "./components/EditBook/EditBook.js";
 import MoreInfo from "./components/MoreInfo/MoreInfo.js";
 import * as BookService from "./services/bookService.js";
+import ReactNotification from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [books, setBooks] = useState([]);
@@ -36,6 +38,7 @@ const App = () => {
 
   return (
     <div>
+      <ReactNotification />
       <Router>
         <Header />
         <Switch>
